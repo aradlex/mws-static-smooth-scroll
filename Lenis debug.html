@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lenis - Debug</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .scroll-indicator { position: fixed; top: 0; left: 0; height: 4px; background: linear-gradient(90deg, #667eea, #764ba2); z-index: 1000; transition: width 0.1s ease; }
+        .debug-visualization { position: fixed; top: 20px; left: 20px; background: rgba(0, 0, 0, 0.9); color: white; padding: 1rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.75rem; z-index: 10000; min-width: 250px; }
+        .velocity-chart { width: 100%; height: 60px; background: var(--surface); border: 1px solid var(--border); border-radius: 0.5rem; margin: 1rem 0; position: relative; overflow: hidden; }
+        .velocity-bar { position: absolute; bottom: 0; width: 2px; background: var(--primary-color); transition: height 0.1s ease; }
+        .test-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; border: 2px dashed var(--border); margin: 2rem 0; border-radius: 1rem; position: relative; }
+        .test-section::before { content: attr(data-section); position: absolute; top: 1rem; left: 1rem; background: var(--primary-color); color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; }
+        .test-section:nth-child(even) { background: var(--surface); }
+    </style>
+</head>
+<body>
+    <div class="scroll-indicator" id="scrollIndicator"></div>
+    
+    <div class="debug-visualization" id="debugViz">
+        <div><strong>Lenis Debug</strong></div>
+        <div>Scroll: <span id="scrollY">0</span>px</div>
+        <div>Progress: <span id="scrollPercent">0</span>%</div>
+        <div>Velocity: <span id="velocity">0</span>px/s</div>
+        <div>Direction: <span id="direction">none</span></div>
+        <div>Lerp: <span id="lerpValue">0.1</span></div>
+        <div>RAF: <span id="rafStatus">active</span></div>
+        <div>Duration: <span id="duration">1.2s</span></div>
+        <div>Easing: <span id="easing">easeInOut</span></div>
+        <div>Touch Multi: <span id="touchMulti">2</span></div>
+        <div>Wheel Multi: <span id="wheelMulti">1</span></div>
+    </div>
+
+    <div class="debug-container">
+        <div class="debug-content">
+            <h1>🐛 Lenis Debug Dashboard</h1>
+            <p>Real-time debugging and performance monitoring for Lenis smooth scroll.</p>
+            
+            <div class="demo-content">
+                <h3>📊 Performance Metrics</h3>
+                <div class="velocity-chart" id="velocityChart"></div>
+                <div id="performanceMetrics">
+                    <div class="debug-metric">
+                        <span class="debug-metric-label">Current Velocity:</span>
+                        <span class="debug-metric-value" id="currentVelocity">0 px/s</span>
+                    </div>
+                    <div class="debug-metric">
+                        <span class="debug-metric-label">Max Velocity:</span>
+                        <span class="debug-metric-value" id="maxVelocity">0 px/s</span>
+                    </div>
+                    <div class="debug-metric">
+                        <span class="debug-metric-label">Avg Frame Time:</span>
+                        <span class="debug-metric-value" id="avgFrameTime">16.67ms</span>
+                    </div>
+                    <div class="debug-metric">
+                        <span class="debug-metric-label">Scroll Events/sec:</span>
+                        <span class="debug-metric-value" id="scrollEventsPerSec">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="demo-content">
+                <h3>⚙️ Current Configuration</h3>
+                <div id="configDisplay">
+                    <div class="debug-metric">
+                        <span class="debug-metric-label">Status:</span>
+                        <span class="debug-metric-value" id="lenisStatus">Loading...</span>
+                    </div>
+                    <div class="debug-metric">
+                        <span class="debug-metric-label">Instance:</span>
+                        <span class="debug-metric-value" id="lenisInstance">None</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="test-section" data-section="Section 1" id="section1">
+                <div>
+                    <h2>Lenis Test Section 1</h2>
+                    <p>Testing smooth scroll behavior with Lenis.</p>
+                    <a href="#section2" class="btn btn-primary">Scroll to Section 2</a>
+                </div>
+            </div>
+            
+            <div class="test-section" data-section="Section 2" id="section2">
+                <div>
+                    <h2>Lenis Test Section 2</h2>
+                    <p>Monitoring velocity and performance metrics.</p>
+                    <a href="#section3" class="btn btn-primary">Scroll to Section 3</a>
+                </div>
+            </div>
+            
+            <div class="test-section" data-section="Section 3" id="section3">
+                <div>
+                    <h2>Lenis Test Section 3</h2>
+                    <p>Real-time debugging information display.</p>
+                    <a href="#section4" class="btn btn-primary">Scroll to Section 4</a>
+                </div>
+            </div>
+            
+            <div class="test-section" data-section="Section 4" id="section4">
+                <div>
+                    <h2>Lenis Test Section 4</h2>
+                    <p>Complete Lenis debug testing.</p>
+                    <a href="#section1" class="btn btn-primary">Back to Section 1</a>
+                </div>
+            </div>
+            
+            <div class="demo-content">
+                <h3>📝 Event Log</h3>
+                <div class="debug-log" id="eventLog">
+                    <div class="debug-log-entry">
+                        <span class="debug-log-timestamp">[00:00:00]</span>
+                        Lenis debug session started
+                    </div>
+                </div>
+                <button onclick="clearEventLog()" class="btn btn-secondary" style="margin-top: 1rem;">Clear Log</button>
+            </div>
+        </div>
+        
+        <div class="debug-panel">
+            <h3>🔍 Real-time Debug</h3>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Lenis Status:</span>
+                <span class="debug-metric-value" id="debugStatus">Loading</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Scroll Position:</span>
+                <span class="debug-metric-value" id="debugScrollPos">0px</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Target Scroll:</span>
+                <span class="debug-metric-value" id="debugTargetScroll">0px</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Velocity:</span>
+                <span class="debug-metric-value" id="debugVelocity">0 px/s</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Direction:</span>
+                <span class="debug-metric-value" id="debugDirection">-</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Is Scrolling:</span>
+                <span class="debug-metric-value" id="debugIsScrolling">No</span>
+            </div>
+            
+            <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+            
+            <h4>Quick Actions</h4>
+            <button onclick="scrollToTop()" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">Scroll to Top</button>
+            <button onclick="scrollToBottom()" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">Scroll to Bottom</button>
+            <button onclick="testSmoothScroll()" class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;">Test Scroll</button>
+            <button onclick="stopLenis()" class="btn btn-warning" style="width: 100%; margin-bottom: 0.5rem;">Stop Lenis</button>
+            <button onclick="startLenis()" class="btn btn-success" style="width: 100%; margin-bottom: 0.5rem;">Start Lenis</button>
+            
+            <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+            
+            <div style="text-align: center;">
+                <a href="index.html" class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;">← Config</a>
+                <a href="Lenis.html" class="btn btn-demo" style="width: 100%;">Demo →</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let lenisInstance = null;
+        let debugState = {
+            frameCount: 0,
+            lastTime: performance.now(),
+            velocityHistory: [],
+            maxVelocity: 0,
+            scrollEvents: 0,
+            config: null
+        };
+        
+        function initLenisDebug() {
+            setupConfigTracking();
+            startPerformanceMonitoring();
+            logEvent('Lenis debug initialized');
+        }
+        
+        function setupConfigTracking() {
+            if (window.opener) {
+                window.opener.postMessage({ type: 'requestConfig' }, '*');
+            }
+            
+            window.addEventListener('message', (e) => {
+                if (e.data.type === 'configUpdate') {
+                    updateConfigDisplay(e.data.config.lenis, e.data.isEnabled);
+                    applyLenisConfig(e.data.config.lenis, e.data.isEnabled);
+                }
+            });
+            
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'smoothScrollConfig') {
+                    try {
+                        const config = JSON.parse(e.newValue);
+                        if (config.currentLibrary === 'lenis') {
+                            updateConfigDisplay(config.config.lenis, config.isEnabled);
+                            applyLenisConfig(config.config.lenis, config.isEnabled);
+                        }
+                    } catch (error) {
+                        console.warn('Error parsing config:', error);
+                    }
+                }
+            });
+            
+            try {
+                const stored = localStorage.getItem('smoothScrollConfig');
+                if (stored) {
+                    const config = JSON.parse(stored);
+                    if (config.currentLibrary === 'lenis') {
+                        updateConfigDisplay(config.config.lenis, config.isEnabled);
+                        applyLenisConfig(config.config.lenis, config.isEnabled);
+                    }
+                }
+            } catch (error) {
+                console.warn('Error loading config:', error);
+            }
+        }
+        
+        function applyLenisConfig(config, isEnabled) {
+            if (!config || !config.enable || !isEnabled) {
+                destroyLenis();
+                return;
+            }
+            
+            if (typeof Lenis === 'undefined') {
+                setTimeout(() => applyLenisConfig(config, isEnabled), 100);
+                return;
+            }
+            
+            destroyLenis();
+            
+            const easingFunctions = {
+                linear: (t) => t,
+                easeOut: (t) => 1 - Math.pow(1 - t, 3),
+                easeIn: (t) => t * t * t,
+                easeInOut: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+            };
+            
+            const lenisConfig = {
+                duration: config.duration || 1.2,
+                easing: easingFunctions[config.easing] || easingFunctions.easeInOut,
+                lerp: config.lerp || 0.1,
+                direction: config.direction || 'vertical',
+                smooth: true,
+                mouseMultiplier: config['wheel-multiplier'] || 1,
+                touchMultiplier: config['touch-multiplier'] || 2,
+                syncTouch: config['sync-touch'] || false,
+                infinite: config.infinite || false
+            };
+            
+            lenisInstance = new Lenis(lenisConfig);
+            debugState.config = config;
+            
+            function raf(time) {
+                if (lenisInstance) {
+                    lenisInstance.raf(time);
+                    updateDebugInfo();
+                    requestAnimationFrame(raf);
+                }
+            }
+            requestAnimationFrame(raf);
+            
+            updateConfigDisplay(config, isEnabled);
+            logEvent('Lenis initialized with debug monitoring');
+        }
+        
+        function updateDebugInfo() {
+            if (!lenisInstance) return;
+            
+            const scroll = lenisInstance.scroll || 0;
+            const velocity = Math.abs(lenisInstance.velocity || 0);
+            const progress = Math.round((scroll / (lenisInstance.limit || 1)) * 100);
+            const direction = lenisInstance.velocity > 0 ? 'down' : lenisInstance.velocity < 0 ? 'up' : 'none';
+            
+            // Update UI elements
+            document.getElementById('scrollY').textContent = Math.round(scroll);
+            document.getElementById('scrollPercent').textContent = progress;
+            document.getElementById('velocity').textContent = Math.round(velocity);
+            document.getElementById('direction').textContent = direction;
+            document.getElementById('scrollIndicator').style.width = progress + '%';
+            
+            // Update debug panel
+            document.getElementById('debugScrollPos').textContent = Math.round(scroll) + 'px';
+            document.getElementById('debugVelocity').textContent = Math.round(velocity) + ' px/s';
+            document.getElementById('debugDirection').textContent = direction;
+            document.getElementById('debugIsScrolling').textContent = velocity > 1 ? 'Yes' : 'No';
+            
+            // Update performance metrics
+            debugState.velocityHistory.push(velocity);
+            if (debugState.velocityHistory.length > 100) {
+                debugState.velocityHistory.shift();
+            }
+            
+            if (velocity > debugState.maxVelocity) {
+                debugState.maxVelocity = velocity;
+                document.getElementById('maxVelocity').textContent = Math.round(velocity) + ' px/s';
+            }
+            
+            document.getElementById('currentVelocity').textContent = Math.round(velocity) + ' px/s';
+            
+            updateVelocityChart(velocity);
+        }
+        
+        function updateVelocityChart(velocity) {
+            const chart = document.getElementById('velocityChart');
+            const bar = document.createElement('div');
+            bar.className = 'velocity-bar';
+            bar.style.left = (chart.children.length * 2) + 'px';
+            bar.style.height = Math.min(velocity / 10, 60) + 'px';
+            
+            chart.appendChild(bar);
+            
+            if (chart.children.length > 100) {
+                chart.removeChild(chart.firstChild);
+                Array.from(chart.children).forEach((child, index) => {
+                    child.style.left = (index * 2) + 'px';
+                });
+            }
+        }
+        
+        function updateConfigDisplay(config, isEnabled) {
+            if (!config) return;
+            
+            document.getElementById('lenisStatus').textContent = config.enable && isEnabled ? 'Enabled' : 'Disabled';
+            document.getElementById('lenisInstance').textContent = lenisInstance ? 'Active' : 'None';
+            document.getElementById('debugStatus').textContent = lenisInstance ? 'Active' : 'Inactive';
+            
+            // Update debug visualization
+            document.getElementById('lerpValue').textContent = config.lerp || '0.1';
+            document.getElementById('duration').textContent = (config.duration || 1.2) + 's';
+            document.getElementById('easing').textContent = config.easing || 'easeInOut';
+            document.getElementById('touchMulti').textContent = config['touch-multiplier'] || '2';
+            document.getElementById('wheelMulti').textContent = config['wheel-multiplier'] || '1';
+        }
+        
+        function destroyLenis() {
+            if (lenisInstance) {
+                lenisInstance.destroy();
+                lenisInstance = null;
+                logEvent('Lenis instance destroyed');
+            }
+        }
+        
+        function startPerformanceMonitoring() {
+            let frameCount = 0;
+            let lastTime = performance.now();
+            
+            function measurePerformance() {
+                const now = performance.now();
+                const frameTime = now - lastTime;
+                
+                if (frameCount % 60 === 0) {
+                    document.getElementById('avgFrameTime').textContent = Math.round(frameTime * 100) / 100 + 'ms';
+                }
+                
+                lastTime = now;
+                frameCount++;
+                requestAnimationFrame(measurePerformance);
+            }
+            
+            requestAnimationFrame(measurePerformance);
+        }
+        
+        function logEvent(message) {
+            const log = document.getElementById('eventLog');
+            const entry = document.createElement('div');
+            entry.className = 'debug-log-entry';
+            
+            const timestamp = new Date().toLocaleTimeString();
+            entry.innerHTML = `<span class="debug-log-timestamp">[${timestamp}]</span> ${message}`;
+            
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+            
+            if (log.children.length > 50) {
+                log.removeChild(log.firstChild);
+            }
+        }
+        
+        function clearEventLog() {
+            document.getElementById('eventLog').innerHTML = '<div class="debug-log-entry"><span class="debug-log-timestamp">[' + new Date().toLocaleTimeString() + ']</span> Event log cleared</div>';
+        }
+        
+        // Quick action functions
+        function scrollToTop() {
+            if (lenisInstance) {
+                lenisInstance.scrollTo(0);
+                logEvent('Scroll to top triggered');
+            }
+        }
+        
+        function scrollToBottom() {
+            if (lenisInstance) {
+                lenisInstance.scrollTo(document.documentElement.scrollHeight);
+                logEvent('Scroll to bottom triggered');
+            }
+        }
+        
+        function testSmoothScroll() {
+            const sections = ['section1', 'section2', 'section3', 'section4'];
+            let currentIndex = 0;
+            
+            function scrollToNext() {
+                if (currentIndex < sections.length && lenisInstance) {
+                    const element = document.getElementById(sections[currentIndex]);
+                    if (element) {
+                        lenisInstance.scrollTo(element);
+                        logEvent(`Test scroll to ${sections[currentIndex]}`);
+                    }
+                    currentIndex++;
+                    setTimeout(scrollToNext, 2000);
+                } else {
+                    logEvent('Smooth scroll test completed');
+                }
+            }
+            
+            logEvent('Starting smooth scroll test');
+            scrollToNext();
+        }
+        
+        function stopLenis() {
+            if (lenisInstance) {
+                lenisInstance.stop();
+                logEvent('Lenis stopped');
+            }
+        }
+        
+        function startLenis() {
+            if (lenisInstance) {
+                lenisInstance.start();
+                logEvent('Lenis started');
+            }
+        }
+        
+        // Initialize when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initLenisDebug);
+        } else {
+            initLenisDebug();
+        }
+        
+        window.addEventListener('beforeunload', destroyLenis);
+    </script>
+</body>
+</html>
