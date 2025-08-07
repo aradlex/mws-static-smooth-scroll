@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smooth Scroll Libraries Demo - Configuration Center</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🚀 Smooth Scroll Libraries Demo</h1>
+            <p class="subtitle">Test, compare, and configure 6 popular smooth scroll implementations</p>
+        </header>
+
+        <main class="main-content">
+            <section class="control-panel">
+                <div class="master-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="masterToggle" checked>
+                        <span class="slider"></span>
+                        <span class="toggle-label">Enable Smooth Scrolling</span>
+                    </label>
+                </div>
+
+                <div class="library-selector">
+                    <label for="librarySelect">Choose Library:</label>
+                    <select id="librarySelect" class="library-dropdown">
+                        <option value="native">Native CSS Smooth Scroll</option>
+                        <option value="lenis">Lenis</option>
+                        <option value="gsap">GSAP ScrollTrigger</option>
+                        <option value="locomotive">Locomotive Scroll</option>
+                        <option value="smoothscrollbar">Smooth Scrollbar</option>
+                        <option value="jquery">jQuery Smooth Scroll</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="demo-links">
+                <h3>🎯 Demo & Debug Pages</h3>
+                <div class="links-grid">
+                    <div class="link-card">
+                        <h4>Native CSS Smooth Scroll</h4>
+                        <div class="link-buttons">
+                            <a href="Native CSS Smooth Scroll.html" class="btn btn-demo" target="_blank">Demo</a>
+                            <a href="Native CSS Smooth Scroll debug.html" class="btn btn-debug" target="_blank">Debug</a>
+                        </div>
+                    </div>
+                    <div class="link-card">
+                        <h4>Lenis</h4>
+                        <div class="link-buttons">
+                            <a href="Lenis.html" class="btn btn-demo" target="_blank">Demo</a>
+                            <a href="Lenis debug.html" class="btn btn-debug" target="_blank">Debug</a>
+                        </div>
+                    </div>
+                    <div class="link-card">
+                        <h4>GSAP ScrollTrigger</h4>
+                        <div class="link-buttons">
+                            <a href="GSAP ScrollTrigger.html" class="btn btn-demo" target="_blank">Demo</a>
+                            <a href="GSAP ScrollTrigger debug.html" class="btn btn-debug" target="_blank">Debug</a>
+                        </div>
+                    </div>
+                    <div class="link-card">
+                        <h4>Locomotive Scroll</h4>
+                        <div class="link-buttons">
+                            <a href="Locomotive Scroll.html" class="btn btn-demo" target="_blank">Demo</a>
+                            <a href="Locomotive Scroll debug.html" class="btn btn-debug" target="_blank">Debug</a>
+                        </div>
+                    </div>
+                    <div class="link-card">
+                        <h4>Smooth Scrollbar</h4>
+                        <div class="link-buttons">
+                            <a href="Smooth Scrollbar.html" class="btn btn-demo" target="_blank">Demo</a>
+                            <a href="Smooth Scrollbar debug.html" class="btn btn-debug" target="_blank">Debug</a>
+                        </div>
+                    </div>
+                    <div class="link-card">
+                        <h4>jQuery Smooth Scroll</h4>
+                        <div class="link-buttons">
+                            <a href="jQuery Smooth Scroll.html" class="btn btn-demo" target="_blank">Demo</a>
+                            <a href="jQuery Smooth Scroll debug.html" class="btn btn-debug" target="_blank">Debug</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Smooth Scroll Libraries Demo. Built for testing and comparison purposes.</p>
+        </footer>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
