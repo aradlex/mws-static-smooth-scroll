@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lenis - Demo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .hero-content h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .hero-content p {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 1.2rem 2.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .cta-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .feature-card {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="demo-nav">
+        <h3>🧭 Navigation</h3>
+        <ul>
+            <li><a href="#hero">Hero</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#performance">Performance</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+            <a href="Lenis debug.html" class="btn btn-debug" style="width: 100%; text-align: center;">Debug View</a>
+        </div>
+    </nav>
+
+    <a href="index.html" class="back-to-config">⚙️ Back to Config</a>
+
+    <section id="hero" class="hero-section">
+        <div class="hero-content">
+            <h1>Lenis Smooth Scroll</h1>
+            <p>Experience buttery-smooth scrolling with Lenis - a lightweight, robust, and performant smooth scroll library.</p>
+            <a href="#features" class="cta-button">Discover Features</a>
+        </div>
+    </section>
+
+    <section id="features" class="demo-section">
+        <div class="demo-container">
+            <h2>🚀 Why Choose Lenis?</h2>
+            <p>Lenis stands out as the premier choice for smooth scrolling with its advanced features and exceptional performance.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Lightning Fast</h3>
+                    <p>Optimized for 60fps performance with minimal CPU usage. Uses requestAnimationFrame for smooth animations.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Precise Control</h3>
+                    <p>Fine-tune every aspect of scrolling behavior with lerp values, easing functions, and custom duration settings.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Mobile Optimized</h3>
+                    <p>Seamless touch support with configurable multipliers and sync options. Works beautifully on all devices.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔧</div>
+                    <h3>Highly Configurable</h3>
+                    <p>Extensive API with options for direction, wrapper elements, infinite scroll, and custom easing functions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="performance" class="demo-section">
+        <div class="demo-container">
+            <h2>📊 Performance Metrics</h2>
+            <p>Lenis delivers exceptional performance across all metrics that matter for smooth scrolling experiences.</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin: 3rem 0;">
+                <div style="text-align: center; padding: 2rem; background: var(--surface); border-radius: 1rem;">
+                    <div style="font-size: 3rem; font-weight: 700; color: var(--primary-color);">60</div>
+                    <div style="color: var(--text-secondary);">Frames Per Second</div>
+                </div>
+                
+                <div style="text-align: center; padding: 2rem; background: var(--surface); border-radius: 1rem;">
+                    <div style="font-size: 3rem; font-weight: 700; color: var(--primary-color);">0.1</div>
+                    <div style="color: var(--text-secondary);">Default Lerp Value</div>
+                </div>
+                
+                <div style="text-align: center; padding: 2rem; background: var(--surface); border-radius: 1rem;">
+                    <div style="font-size: 3rem; font-weight: 700; color: var(--primary-color);">1.2s</div>
+                    <div style="color: var(--text-secondary);">Default Duration</div>
+                </div>
+                
+                <div style="text-align: center; padding: 2rem; background: var(--surface); border-radius: 1rem;">
+                    <div style="font-size: 3rem; font-weight: 700; color: var(--primary-color);">100%</div>
+                    <div style="color: var(--text-secondary);">Browser Support</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="demo-section">
+        <div class="demo-container">
+            <h2>🚀 Get Started with Lenis</h2>
+            <p>Ready to implement Lenis in your project? Here's everything you need to get started.</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0;">
+                <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                    <h3>🚀 Quick Start</h3>
+                    <pre style="background: var(--background); padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.8rem;"><code>// Install via npm
+npm install @studio-freight/lenis
+
+// Or use CDN
+&lt;script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@latest/dist/lenis.min.js"&gt;&lt;/script&gt;</code></pre>
+                </div>
+                
+                <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                    <h3>⚙️ Basic Setup</h3>
+                    <pre style="background: var(--background); padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.8rem;"><code>const lenis = new Lenis({
+  duration: 1.2,
+  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+  direction: 'vertical',
+  smooth: true
+});
+
+function raf(time) {
+  lenis.raf(time);
+  requestAnimationFrame(raf);
+}
+requestAnimationFrame(raf);</code></pre>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="https://github.com/studio-freight/lenis" target="_blank" class="btn btn-demo" style="margin-right: 1rem;">View Documentation</a>
+                <a href="Lenis debug.html" class="btn btn-debug">Debug This Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="demo-section" style="background: var(--surface); border-top: 1px solid var(--border);">
+        <div class="demo-container" style="text-align: center;">
+            <h3>Lenis Smooth Scroll Demo</h3>
+            <p>Experience the power of professional-grade smooth scrolling with Lenis.</p>
+            <p>
+                <a href="index.html">← Back to Configuration</a> |
+                <a href="Lenis debug.html">Debug View →</a>
+            </p>
+            <p style="margin-top: 2rem; color: var(--text-secondary); font-size: 0.875rem;">
+                Scroll to top: <a href="#hero">🔝</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        console.log('Lenis demo page loaded');
+        // Lenis initialization would go here based on configuration
+    </script>
+</body>
+</html>
