@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Native CSS Smooth Scroll - Debug</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        html { scroll-behavior: smooth; }
+        .test-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; border: 2px dashed var(--border); margin: 2rem 0; border-radius: 1rem; position: relative; }
+        .test-section::before { content: attr(data-section); position: absolute; top: 1rem; left: 1rem; background: var(--primary-color); color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; }
+        .test-section:nth-child(even) { background: var(--surface); }
+    </style>
+</head>
+<body>
+    <div class="debug-overlay" id="debugOverlay">
+        <div><strong>Native CSS Debug</strong></div>
+        <div>Scroll Y: <span id="scrollY">0</span>px</div>
+        <div>Progress: <span id="scrollPercent">0</span>%</div>
+        <div>Active Target: <span id="activeTarget">none</span></div>
+        <div>Scroll Behavior: <span id="scrollBehavior">smooth</span></div>
+        <div>Browser Support: <span id="browserSupport">checking...</span></div>
+        <div>Viewport: <span id="viewport">0x0</span></div>
+        <div>Document Height: <span id="docHeight">0</span>px</div>
+        <div>Direction: <span id="scrollDirection">none</span></div>
+    </div>
+
+    <div class="debug-container">
+        <div class="debug-content">
+            <h1>🐛 Native CSS Smooth Scroll Debug</h1>
+            <p>This page provides real-time debugging information for native CSS smooth scroll implementation.</p>
+            
+            <div class="test-section" data-section="Section 1" id="section1">
+                <div>
+                    <h2>Test Section 1</h2>
+                    <p>This is the first test section for debugging scroll behavior.</p>
+                    <a href="#section2" class="btn btn-primary">Scroll to Section 2</a>
+                </div>
+            </div>
+            
+            <div class="test-section" data-section="Section 2" id="section2">
+                <div>
+                    <h2>Test Section 2</h2>
+                    <p>This is the second test section. Notice the smooth scrolling behavior.</p>
+                    <a href="#section3" class="btn btn-primary">Scroll to Section 3</a>
+                </div>
+            </div>
+            
+            <div class="test-section" data-section="Section 3" id="section3">
+                <div>
+                    <h2>Test Section 3</h2>
+                    <p>This is the third test section for comprehensive testing.</p>
+                    <a href="#section4" class="btn btn-primary">Scroll to Section 4</a>
+                </div>
+            </div>
+            
+            <div class="test-section" data-section="Section 4" id="section4">
+                <div>
+                    <h2>Test Section 4</h2>
+                    <p>Final test section. Test completed!</p>
+                    <a href="#section1" class="btn btn-primary">Back to Section 1</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="debug-panel">
+            <h3>🔍 Real-time Debug</h3>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Status:</span>
+                <span class="debug-metric-value" id="debugStatus">Active</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Scroll Position:</span>
+                <span class="debug-metric-value" id="debugScrollPos">0px</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Target Element:</span>
+                <span class="debug-metric-value" id="debugTarget">None</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Browser Support:</span>
+                <span class="debug-metric-value" id="debugBrowserSupport">Checking...</span>
+            </div>
+            
+            <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+            
+            <h4>Quick Actions</h4>
+            <button onclick="scrollToTop()" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">Scroll to Top</button>
+            <button onclick="scrollToBottom()" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">Scroll to Bottom</button>
+            
+            <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+            
+            <div style="text-align: center;">
+                <a href="index.html" class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;">← Config</a>
+                <a href="native-css.html" class="btn btn-demo" style="width: 100%;">Demo →</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let debugState = { lastScrollY: 0 };
+        
+        function initDebug() {
+            checkBrowserSupport();
+            setupScrollTracking();
+            updateViewportInfo();
+        }
+        
+        function checkBrowserSupport() {
+            const scrollBehaviorSupported = 'scrollBehavior' in document.documentElement.style;
+            const scrollIntoViewSupported = 'scrollIntoView' in Element.prototype;
+            const computedStyle = getComputedStyle(document.documentElement);
+            const scrollBehavior = computedStyle.scrollBehavior || 'auto';
+            
+            document.getElementById('scrollBehavior').textContent = scrollBehavior;
+            document.getElementById('browserSupport').textContent = scrollBehaviorSupported ? 'Full Support' : 'Partial Support';
+            document.getElementById('debugBrowserSupport').textContent = scrollBehaviorSupported ? 'Supported' : 'Not Supported';
+        }
+        
+        function setupScrollTracking() {
+            let lastDirection = 'none';
+            
+            window.addEventListener('scroll', () => {
+                const scrollY = window.pageYOffset;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = Math.round((scrollY / docHeight) * 100);
+                
+                // Calculate direction
+                let direction = 'none';
+                if (scrollY > debugState.lastScrollY) direction = 'down';
+                else if (scrollY < debugState.lastScrollY) direction = 'up';
+                
+                // Update UI
+                document.getElementById('scrollY').textContent = Math.round(scrollY);
+                document.getElementById('scrollPercent').textContent = scrollPercent;
+                document.getElementById('scrollDirection').textContent = direction;
+                document.getElementById('debugScrollPos').textContent = Math.round(scrollY) + 'px';
+                
+                debugState.lastScrollY = scrollY;
+            });
+            
+            // Track click events on anchor links
+            document.addEventListener('click', (e) => {
+                if (e.target.tagName === 'A' && e.target.getAttribute('href')?.startsWith('#')) {
+                    const targetId = e.target.getAttribute('href').substring(1);
+                    document.getElementById('activeTarget').textContent = targetId;
+                    document.getElementById('debugTarget').textContent = targetId;
+                }
+            });
+        }
+        
+        function updateViewportInfo() {
+            const updateInfo = () => {
+                document.getElementById('viewport').textContent = `${window.innerWidth}x${window.innerHeight}`;
+                document.getElementById('docHeight').textContent = document.documentElement.scrollHeight;
+            };
+            
+            updateInfo();
+            window.addEventListener('resize', updateInfo);
+        }
+        
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function scrollToBottom() {
+            window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+        }
+        
+        // Initialize when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initDebug);
+        } else {
+            initDebug();
+        }
+    </script>
+</body>
+</html>
+

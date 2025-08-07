@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Smooth Scroll - Demo</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero-content h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .feature-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin: 4rem 0;
+        }
+        
+        .feature-card {
+            background: var(--surface);
+            padding: 3rem 2rem;
+            border-radius: 1.5rem;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .feature-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+        
+        .jquery-demo {
+            background: var(--surface);
+            padding: 5rem 0;
+            position: relative;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .demo-box {
+            height: 300px;
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        
+        .callback-demo {
+            background: var(--background);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+            margin: 2rem 0;
+        }
+        
+        .callback-log {
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+        }
+        
+        .easing-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .easing-button {
+            padding: 1rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .easing-button:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <nav class="demo-nav">
+        <h3>🧭 Navigation</h3>
+        <ul>
+            <li><a href="#hero" class="smooth-link">Hero</a></li>
+            <li><a href="#features" class="smooth-link">Features</a></li>
+            <li><a href="#demo" class="smooth-link">Demo</a></li>
+            <li><a href="#testimonials" class="smooth-link">Testimonials</a></li>
+            <li><a href="#contact" class="smooth-link">Contact</a></li>
+        </ul>
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+            <a href="jquery-smooth-scroll-debug.html" class="btn btn-debug" style="width: 100%; text-align: center;">Debug View</a>
+        </div>
+    </nav>
+
+    <a href="index.html" class="back-to-config">⚙️ Back to Config</a>
+
+    <section id="hero" class="hero-section">
+        <div class="hero-content">
+            <h1>jQuery Smooth Scroll</h1>
+            <p>Experience the classic and reliable jQuery-based smooth scrolling with extensive customization options, callbacks, and proven cross-browser compatibility.</p>
+            <a href="#features" class="cta-button smooth-link">Explore Features</a>
+        </div>
+    </section>
+
+    <section id="features" class="demo-section">
+        <div class="demo-container">
+            <h2>🔧 jQuery Smooth Scroll Features</h2>
+            <p>jQuery Smooth Scroll provides a robust, time-tested solution for smooth scrolling with extensive configuration options.</p>
+            
+            <div class="feature-showcase">
+                <div class="feature-card">
+                    <span class="feature-icon">🏛️</span>
+                    <h3>Battle-Tested</h3>
+                    <p>Years of production use across thousands of websites with proven reliability and cross-browser compatibility.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">⚙️</span>
+                    <h3>Highly Configurable</h3>
+                    <p>Extensive options for speed, easing, offsets, callbacks, and target selectors to fit any use case.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🔄</span>
+                    <h3>Callback Support</h3>
+                    <p>Before and after scroll callbacks for custom logic, analytics tracking, and state management.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🎯</span>
+                    <h3>Flexible Targeting</h3>
+                    <p>Target all anchor links or use custom selectors with exclude patterns for precise control.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="demo" class="jquery-demo">
+        <div class="demo-container">
+            <h2>🚀 jQuery Smooth Scroll in Action</h2>
+            <p>Test different easing functions and see callback execution in real-time.</p>
+            
+            <div class="callback-demo">
+                <h3>📋 Callback Log</h3>
+                <div class="callback-log" id="callbackLog">
+                    Callback events will appear here...
+                </div>
+                <button onclick="clearLog()" class="btn btn-secondary" style="margin-top: 1rem;">Clear Log</button>
+            </div>
+            
+            <div class="easing-demo">
+                <button class="easing-button" onclick="scrollWithEasing('swing', '#testimonials')">
+                    Swing Easing
+                </button>
+                <button class="easing-button" onclick="scrollWithEasing('linear', '#testimonials')">
+                    Linear Easing
+                </button>
+                <button class="easing-button" onclick="scrollWithEasing('easeInOutQuad', '#testimonials')">
+                    Ease In-Out Quad
+                </button>
+            </div>
+            
+            <div class="demo-grid">
+                <div class="demo-box">jQuery Powered</div>
+                <div class="demo-box">Callback Support</div>
+                <div class="demo-box">Custom Easing</div>
+                <div class="demo-box">Flexible Targeting</div>
+                <div class="demo-box">Cross-browser</div>
+                <div class="demo-box">Production Ready</div>
+            </div>
+            
+            <div style="background: var(--background); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border); margin: 3rem 0;">
+                <h3>📊 Current Configuration</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                    <div>
+                        <strong>Speed:</strong> <span id="speedValue">800ms</span>
+                    </div>
+                    <div>
+                        <strong>Easing:</strong> <span id="easingValue">swing</span>
+                    </div>
+                    <div>
+                        <strong>Offset:</strong> <span id="offsetValue">0px</span>
+                    </div>
+                    <div>
+                        <strong>Auto Focus:</strong> <span id="autoFocusValue">No</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="demo-section">
+        <div class="demo-container">
+            <h2>💬 What Developers Say</h2>
+            <p>Here's what web developers think about jQuery Smooth Scroll:</p>
+            
+            <div style="display: grid; gap: 2rem; margin: 3rem 0;">
+                <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                    <p style="font-style: italic; margin-bottom: 1rem;">"jQuery Smooth Scroll is incredibly reliable. I've used it on dozens of projects and it just works every time, across all browsers."</p>
+                    <div style="font-weight: 600; color: var(--primary-color);">— Tom Anderson, Full Stack Developer</div>
+                </div>
+                
+                <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                    <p style="font-style: italic; margin-bottom: 1rem;">"The callback system is perfect for tracking user interactions and the configuration options cover every use case I've encountered."</p>
+                    <div style="font-weight: 600; color: var(--primary-color);">— Jennifer Liu, Frontend Architect</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="demo-section">
+        <div class="demo-container">
+            <h2>🚀 Get Started with jQuery Smooth Scroll</h2>
+            <p>Ready to implement reliable smooth scrolling? Here's everything you need to get started.</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0;">
+                <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                    <h3>🚀 Quick Start</h3>
+                    <pre style="background: var(--background); padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.8rem;"><code>// Load jQuery and plugin
+&lt;script src="libs/jquery.min.js"&gt;&lt;/script&gt;
+&lt;script src="libs/jquery.smooth-scroll.min.js"&gt;&lt;/script&gt;</code></pre>
+                </div>
+                
+                <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                    <h3>⚙️ Basic Setup</h3>
+                    <pre style="background: var(--background); padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.8rem;"><code>$('a[href^="#"]').smoothScroll({
+  speed: 800,
+  easing: 'swing',
+  offset: 0,
+  beforeScroll: function() {
+    console.log('Starting scroll...');
+  },
+  afterScroll: function() {
+    console.log('Scroll complete!');
+  }
+});</code></pre>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="https://github.com/kswedberg/jquery-smooth-scroll" target="_blank" class="btn btn-primary" style="margin-right: 1rem;">View Documentation</a>
+                <a href="jquery-smooth-scroll-debug.html" class="btn btn-debug">Debug This Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="demo-section" style="background: var(--surface); border-top: 1px solid var(--border);">
+        <div class="demo-container text-center">
+            <h3>jQuery Smooth Scroll Demo</h3>
+            <p>Classic, reliable smooth scrolling with extensive customization options.</p>
+            <p>
+                <a href="index.html">← Back to Configuration</a> |
+                <a href="jquery-smooth-scroll-debug.html">Debug View →</a>
+            </p>
+            <p style="margin-top: 2rem; color: var(--text-muted); font-size: 0.875rem;">
+                Scroll to top: <a href="#hero" class="smooth-link">🔝</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="libs/jquery.min.js"></script>
+    <script src="libs/jquery.smooth-scroll.min.js"></script>
+    <script>
+        let currentConfig = null;
+        
+        function initjQueryDemo() {
+            try {
+                const stored = sessionStorage.getItem('smoothScrollConfig');
+                if (stored) {
+                    const config = JSON.parse(stored);
+                    if (config.currentLibrary === 'jquery-smooth-scroll' && config.config && config.config['jquery-smooth-scroll']) {
+                        applyjQueryConfig(config.config['jquery-smooth-scroll'], config.isEnabled);
+                    }
+                }
+            } catch (error) {
+                console.warn('Error loading config:', error);
+                applyjQueryConfig({
+                    enable: true,
+                    speed: 800,
+                    easing: 'swing',
+                    offset: 0,
+                    autoFocus: false,
+                    preventDefault: true,
+                    targetLinks: 'all',
+                    customSelector: '',
+                    exclude: '',
+                    beforeCallback: '',
+                    afterCallback: '',
+                    updateHash: false
+                }, true);
+            }
+        }
+        
+        function applyjQueryConfig(config, isEnabled) {
+            if (!config || !config.enable || !isEnabled) {
+                destroyjQuery();
+                return;
+            }
+            
+            if (typeof jQuery === 'undefined') {
+                setTimeout(() => applyjQueryConfig(config, isEnabled), 100);
+                return;
+            }
+            
+            destroyjQuery();
+            
+            const $ = jQuery;
+            currentConfig = config;
+            
+            const targetSelector = config.targetLinks === 'custom' && config.customSelector
+                ? config.customSelector
+                : 'a[href^="#"]';
+            
+            const smoothScrollConfig = {
+                speed: config.speed || 800,
+                easing: config.easing || 'swing',
+                offset: config.offset || 0,
+                autoFocus: config.autoFocus || false,
+                preventDefault: config.preventDefault !== false,
+                exclude: config.exclude ? config.exclude.split(',').map(s => s.trim()) : [],
+                beforeScroll: function() {
+                    logCallback('beforeScroll', 'Scroll animation started');
+                    if (config.beforeCallback && window[config.beforeCallback]) {
+                        window[config.beforeCallback]();
+                    }
+                },
+                afterScroll: function() {
+                    logCallback('afterScroll', 'Scroll animation completed');
+                    if (config.afterCallback && window[config.afterCallback]) {
+                        window[config.afterCallback]();
+                    }
+                }
+            };
+            
+            if (config.updateHash) {
+                smoothScrollConfig.afterScroll = function() {
+                    logCallback('afterScroll', 'Scroll completed, hash updated');
+                    if (config.afterCallback && window[config.afterCallback]) {
+                        window[config.afterCallback]();
+                    }
+                };
+            }
+            
+            $(targetSelector).smoothScroll(smoothScrollConfig);
+            
+            // Update display values
+            updateConfigDisplay(config);
+            
+            console.log('jQuery Smooth Scroll initialized with config:', config);
+        }
+        
+        function updateConfigDisplay(config) {
+            document.getElementById('speedValue').textContent = (config.speed || 800) + 'ms';
+            document.getElementById('easingValue').textContent = config.easing || 'swing';
+            document.getElementById('offsetValue').textContent = (config.offset || 0) + 'px';
+            document.getElementById('autoFocusValue').textContent = config.autoFocus ? 'Yes' : 'No';
+        }
+        
+        function logCallback(type, message) {
+            const log = document.getElementById('callbackLog');
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = `[${timestamp}] ${type}: ${message}\n`;
+            log.textContent += entry;
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        function clearLog() {
+            document.getElementById('callbackLog').textContent = 'Callback events will appear here...';
+        }
+        
+        function scrollWithEasing(easing, target) {
+            if (typeof jQuery === 'undefined') return;
+            
+            const $ = jQuery;
+            const targetElement = $(target);
+            
+            if (targetElement.length) {
+                logCallback('customScroll', `Scrolling to ${target} with ${easing} easing`);
+                
+                $('html, body').animate({
+                    scrollTop: targetElement.offset().top
+                }, {
+                    duration: currentConfig?.speed || 800,
+                    easing: easing,
+                    complete: function() {
+                        logCallback('customScroll', `Custom scroll to ${target} completed`);
+                    }
+                });
+            }
+        }
+        
+        function destroyjQuery() {
+            if (typeof jQuery !== 'undefined') {
+                jQuery('a[href^="#"]').off('click.smoothScroll');
+            }
+        }
+        
+        // Initialize when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initjQueryDemo);
+        } else {
+            initjQueryDemo();
+        }
+        
+        window.addEventListener('beforeunload', destroyjQuery);
+    </script>
+</body>
+</html>
+

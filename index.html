@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smooth Scroll Libraries Demo - Configuration Center</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -30,426 +27,27 @@
                 <div class="library-selector">
                     <label for="librarySelect">Choose Library:</label>
                     <select id="librarySelect" class="library-dropdown">
-                        <option value="native">Native CSS Smooth Scroll</option>
+                        <option value="native-css">Native CSS Smooth Scroll</option>
                         <option value="lenis">Lenis</option>
-                        <option value="gsap">GSAP ScrollTrigger</option>
+                        <option value="gsap-scrolltrigger">GSAP ScrollTrigger</option>
                         <option value="locomotive">Locomotive Scroll</option>
-                        <option value="smoothscrollbar">Smooth Scrollbar</option>
-                        <option value="jquery">jQuery Smooth Scroll</option>
+                        <option value="smooth-scrollbar">Smooth Scrollbar</option>
+                        <option value="jquery-smooth-scroll">jQuery Smooth Scroll</option>
                     </select>
                 </div>
             </section>
 
-            <!-- CDN Assets Info -->
-            <section class="cdn-info">
+            <!-- Assets Info -->
+            <section class="assets-info">
                 <h3>📦 Loaded Assets</h3>
-                <div id="cdnAssetsInfo" class="assets-list">
-                    <p class="no-assets">No external assets required for Native CSS</p>
-                </div>
-                <div class="loading-indicator" id="loadingIndicator" style="display: none;">
-                    <div class="spinner"></div>
-                    <span>Loading assets...</span>
-                </div>
+                <pre id="assets">No external assets required for Native CSS</pre>
             </section>
 
             <!-- Dynamic Configuration Panel -->
             <section class="config-panel">
                 <h3>⚙️ Configuration</h3>
                 <div id="configContainer">
-                    <!-- Native CSS Config (Default) -->
-                    <div id="config-native" class="config-section active">
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="native-enable" checked>
-                                <span class="checkmark"></span>
-                                Enable Native Smooth Scroll
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label for="native-target">Target Elements:</label>
-                            <select id="native-target">
-                                <option value="all">All links</option>
-                                <option value="custom">Custom selector</option>
-                            </select>
-                            <input type="text" id="native-custom-selector" placeholder="e.g., .smooth-link" style="display: none;">
-                        </div>
-                        <div class="config-group">
-                            <label for="native-behavior">Scroll Behavior:</label>
-                            <select id="native-behavior">
-                                <option value="smooth">Smooth</option>
-                                <option value="auto">Auto</option>
-                            </select>
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="native-fallback" checked>
-                                <span class="checkmark"></span>
-                                Browser Fallback
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Lenis Config -->
-                    <div id="config-lenis" class="config-section">
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="lenis-enable" checked>
-                                <span class="checkmark"></span>
-                                Enable Lenis
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label for="lenis-duration">Duration:</label>
-                            <input type="number" id="lenis-duration" value="1.2" step="0.1" min="0.1" max="5">
-                        </div>
-                        <div class="config-group">
-                            <label for="lenis-easing">Easing:</label>
-                            <select id="lenis-easing">
-                                <option value="easeInOut">Ease In Out</option>
-                                <option value="linear">Linear</option>
-                                <option value="easeOut">Ease Out</option>
-                                <option value="easeIn">Ease In</option>
-                            </select>
-                        </div>
-                        <div class="config-group">
-                            <label for="lenis-lerp">Lerp:</label>
-                            <input type="range" id="lenis-lerp" min="0" max="1" step="0.01" value="0.1">
-                            <span class="range-value">0.1</span>
-                        </div>
-                        <div class="config-group">
-                            <label for="lenis-direction">Direction:</label>
-                            <select id="lenis-direction">
-                                <option value="vertical">Vertical</option>
-                                <option value="horizontal">Horizontal</option>
-                                <option value="both">Both</option>
-                            </select>
-                        </div>
-                        <div class="config-group">
-                            <label for="lenis-wheel-multiplier">Wheel Multiplier:</label>
-                            <input type="number" id="lenis-wheel-multiplier" value="1" step="0.1" min="0.1" max="5">
-                        </div>
-                        <div class="config-group">
-                            <label for="lenis-touch-multiplier">Touch Multiplier:</label>
-                            <input type="number" id="lenis-touch-multiplier" value="2" step="0.1" min="0.1" max="5">
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="lenis-sync-touch">
-                                <span class="checkmark"></span>
-                                Sync Touch
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="lenis-infinite">
-                                <span class="checkmark"></span>
-                                Infinite
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label for="lenis-wrapper">Custom Wrapper:</label>
-                            <input type="text" id="lenis-wrapper" placeholder="e.g., #smooth-wrapper">
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="lenis-disable-mobile">
-                                <span class="checkmark"></span>
-                                Disable on Mobile/Tablet
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- GSAP ScrollTrigger Config -->
-                    <div id="config-gsap" class="config-section">
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="gsap-enable" checked>
-                                <span class="checkmark"></span>
-                                Enable GSAP ScrollTrigger
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label for="gsap-duration">Smooth Duration:</label>
-                            <input type="number" id="gsap-duration" value="1" step="0.1" min="0.1" max="5">
-                        </div>
-                        <div class="config-group">
-                            <label for="gsap-lag">Smooth Lag:</label>
-                            <input type="number" id="gsap-lag" value="0.3" step="0.1" min="0" max="2">
-                        </div>
-                        <div class="config-group">
-                            <label for="gsap-effects">Effects:</label>
-                            <select id="gsap-effects">
-                                <option value="none">None</option>
-                                <option value="fade">Fade</option>
-                                <option value="scale">Scale</option>
-                                <option value="slide">Slide</option>
-                            </select>
-                        </div>
-                        <div class="config-group">
-                            <label for="gsap-trigger-elements">Trigger Elements:</label>
-                            <input type="text" id="gsap-trigger-elements" placeholder="e.g., .trigger-element">
-                        </div>
-                        <div class="config-group">
-                            <label for="gsap-start">Start Position:</label>
-                            <input type="text" id="gsap-start" value="top 80%" placeholder="e.g., top 80%">
-                        </div>
-                        <div class="config-group">
-                            <label for="gsap-end">End Position:</label>
-                            <input type="text" id="gsap-end" value="bottom 20%" placeholder="e.g., bottom 20%">
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="gsap-scrub">
-                                <span class="checkmark"></span>
-                                Scrub
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="gsap-pin">
-                                <span class="checkmark"></span>
-                                Pin Elements
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="gsap-markers">
-                                <span class="checkmark"></span>
-                                Markers (Debug)
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="gsap-refresh" checked>
-                                <span class="checkmark"></span>
-                                Refresh on Resize
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="gsap-disable-mobile">
-                                <span class="checkmark"></span>
-                                Disable on Mobile
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Locomotive Scroll Config -->
-                    <div id="config-locomotive" class="config-section">
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="locomotive-enable" checked>
-                                <span class="checkmark"></span>
-                                Enable Locomotive Scroll
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="locomotive-smooth" checked>
-                                <span class="checkmark"></span>
-                                Smooth
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label for="locomotive-direction">Direction:</label>
-                            <select id="locomotive-direction">
-                                <option value="vertical">Vertical</option>
-                                <option value="horizontal">Horizontal</option>
-                            </select>
-                        </div>
-                        <div class="config-group">
-                            <label for="locomotive-lerp">Lerp:</label>
-                            <input type="number" id="locomotive-lerp" value="0.1" step="0.01" min="0.01" max="1">
-                        </div>
-                        <div class="config-group">
-                            <label for="locomotive-class">Class:</label>
-                            <input type="text" id="locomotive-class" value=".is-inview" placeholder="e.g., .is-inview">
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="locomotive-repeat">
-                                <span class="checkmark"></span>
-                                Repeat Animations
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="locomotive-tablet">
-                                <span class="checkmark"></span>
-                                Enable on Tablet
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="locomotive-smartphone">
-                                <span class="checkmark"></span>
-                                Enable on Smartphone
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="locomotive-reload">
-                                <span class="checkmark"></span>
-                                Reload on Context Menu
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label for="locomotive-touch-multiplier">Touch Multiplier:</label>
-                            <input type="number" id="locomotive-touch-multiplier" value="1.5" step="0.1" min="0.1" max="5">
-                        </div>
-                        <div class="config-group">
-                            <label for="locomotive-firefox-multiplier">Firefox Multiplier:</label>
-                            <input type="number" id="locomotive-firefox-multiplier" value="1" step="0.1" min="0.1" max="5">
-                        </div>
-                        <div class="config-group">
-                            <label for="locomotive-container">Custom Container:</label>
-                            <input type="text" id="locomotive-container" value="data-scroll-container" placeholder="data-scroll-container">
-                        </div>
-                    </div>
-
-                    <!-- Smooth Scrollbar Config -->
-                    <div id="config-smoothscrollbar" class="config-section">
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="smoothscrollbar-enable" checked>
-                                <span class="checkmark"></span>
-                                Enable Smooth Scrollbar
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label for="smoothscrollbar-damping">Damping:</label>
-                            <input type="range" id="smoothscrollbar-damping" min="0" max="1" step="0.01" value="0.1">
-                            <span class="range-value">0.1</span>
-                        </div>
-                        <div class="config-group">
-                            <label for="smoothscrollbar-thumb-size">Thumb Min Size (px):</label>
-                            <input type="number" id="smoothscrollbar-thumb-size" value="20" min="10" max="100">
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="smoothscrollbar-render-pixels">
-                                <span class="checkmark"></span>
-                                Render by Pixels
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="smoothscrollbar-always-show">
-                                <span class="checkmark"></span>
-                                Always Show Tracks
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="smoothscrollbar-continue">
-                                <span class="checkmark"></span>
-                                Continue Scrolling
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label for="smoothscrollbar-wheel-target">Wheel Event Target:</label>
-                            <select id="smoothscrollbar-wheel-target">
-                                <option value="container">Container</option>
-                                <option value="document">Document</option>
-                            </select>
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="smoothscrollbar-overscroll">
-                                <span class="checkmark"></span>
-                                Overscroll Bounce Effect
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="smoothscrollbar-text-selection" checked>
-                                <span class="checkmark"></span>
-                                Text Selection
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="smoothscrollbar-custom-colors">
-                                <span class="checkmark"></span>
-                                Custom Track Colors
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="smoothscrollbar-disable-touch">
-                                <span class="checkmark"></span>
-                                Disable on Touch Devices
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- jQuery Smooth Scroll Config -->
-                    <div id="config-jquery" class="config-section">
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="jquery-enable" checked>
-                                <span class="checkmark"></span>
-                                Enable jQuery Smooth Scroll
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label for="jquery-speed">Animation Speed (ms):</label>
-                            <input type="number" id="jquery-speed" value="800" min="100" max="5000" step="100">
-                        </div>
-                        <div class="config-group">
-                            <label for="jquery-easing">Easing:</label>
-                            <select id="jquery-easing">
-                                <option value="swing">Swing</option>
-                                <option value="linear">Linear</option>
-                                <option value="easeInOutQuad">Ease In Out Quad</option>
-                            </select>
-                        </div>
-                        <div class="config-group">
-                            <label for="jquery-offset">Offset (px):</label>
-                            <input type="number" id="jquery-offset" value="0" min="-500" max="500">
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="jquery-auto-focus">
-                                <span class="checkmark"></span>
-                                Auto Focus
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="jquery-prevent-default" checked>
-                                <span class="checkmark"></span>
-                                Prevent Default
-                            </label>
-                        </div>
-                        <div class="config-group">
-                            <label for="jquery-target-links">Target Links:</label>
-                            <select id="jquery-target-links">
-                                <option value="all">All anchor links</option>
-                                <option value="custom">Custom selector</option>
-                            </select>
-                            <input type="text" id="jquery-custom-selector" placeholder="e.g., .smooth-link" style="display: none;">
-                        </div>
-                        <div class="config-group">
-                            <label for="jquery-exclude">Exclude:</label>
-                            <input type="text" id="jquery-exclude" placeholder="e.g., .no-smooth">
-                        </div>
-                        <div class="config-group">
-                            <label for="jquery-before-callback">Before Scroll Callback:</label>
-                            <input type="text" id="jquery-before-callback" placeholder="Function name">
-                        </div>
-                        <div class="config-group">
-                            <label for="jquery-after-callback">After Scroll Callback:</label>
-                            <input type="text" id="jquery-after-callback" placeholder="Function name">
-                        </div>
-                        <div class="config-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="jquery-update-hash">
-                                <span class="checkmark"></span>
-                                Update URL Hash
-                            </label>
-                        </div>
-                    </div>
+                    <!-- Configuration form will be generated dynamically -->
                 </div>
             </section>
 
@@ -460,57 +58,46 @@
                     <div class="link-card">
                         <h4>Native CSS Smooth Scroll</h4>
                         <div class="link-buttons">
-                            <a href="Native CSS Smooth Scroll.html" class="btn btn-demo" target="_blank">Demo</a>
-                            <a href="Native CSS Smooth Scroll debug.html" class="btn btn-debug" target="_blank">Debug</a>
+                            <a href="native-css.html" class="btn btn-demo" target="_blank">Demo</a>
+                            <a href="native-css-debug.html" class="btn btn-debug" target="_blank">Debug</a>
                         </div>
                     </div>
                     <div class="link-card">
                         <h4>Lenis</h4>
                         <div class="link-buttons">
-                            <a href="Lenis.html" class="btn btn-demo" target="_blank">Demo</a>
-                            <a href="Lenis debug.html" class="btn btn-debug" target="_blank">Debug</a>
+                            <a href="lenis.html" class="btn btn-demo" target="_blank">Demo</a>
+                            <a href="lenis-debug.html" class="btn btn-debug" target="_blank">Debug</a>
                         </div>
                     </div>
                     <div class="link-card">
                         <h4>GSAP ScrollTrigger</h4>
                         <div class="link-buttons">
-                            <a href="GSAP ScrollTrigger.html" class="btn btn-demo" target="_blank">Demo</a>
-                            <a href="GSAP ScrollTrigger debug.html" class="btn btn-debug" target="_blank">Debug</a>
+                            <a href="gsap-scrolltrigger.html" class="btn btn-demo" target="_blank">Demo</a>
+                            <a href="gsap-scrolltrigger-debug.html" class="btn btn-debug" target="_blank">Debug</a>
                         </div>
                     </div>
                     <div class="link-card">
                         <h4>Locomotive Scroll</h4>
                         <div class="link-buttons">
-                            <a href="Locomotive Scroll.html" class="btn btn-demo" target="_blank">Demo</a>
-                            <a href="Locomotive Scroll debug.html" class="btn btn-debug" target="_blank">Debug</a>
+                            <a href="locomotive.html" class="btn btn-demo" target="_blank">Demo</a>
+                            <a href="locomotive-debug.html" class="btn btn-debug" target="_blank">Debug</a>
                         </div>
                     </div>
                     <div class="link-card">
                         <h4>Smooth Scrollbar</h4>
                         <div class="link-buttons">
-                            <a href="Smooth Scrollbar.html" class="btn btn-demo" target="_blank">Demo</a>
-                            <a href="Smooth Scrollbar debug.html" class="btn btn-debug" target="_blank">Debug</a>
+                            <a href="smooth-scrollbar.html" class="btn btn-demo" target="_blank">Demo</a>
+                            <a href="smooth-scrollbar-debug.html" class="btn btn-debug" target="_blank">Debug</a>
                         </div>
                     </div>
                     <div class="link-card">
                         <h4>jQuery Smooth Scroll</h4>
                         <div class="link-buttons">
-                            <a href="jQuery Smooth Scroll.html" class="btn btn-demo" target="_blank">Demo</a>
-                            <a href="jQuery Smooth Scroll debug.html" class="btn btn-debug" target="_blank">Debug</a>
+                            <a href="jquery-smooth-scroll.html" class="btn btn-demo" target="_blank">Demo</a>
+                            <a href="jquery-smooth-scroll-debug.html" class="btn btn-debug" target="_blank">Debug</a>
                         </div>
                     </div>
                 </div>
-            </section>
-
-            <!-- Export Configuration -->
-            <section class="export-section">
-                <h3>💾 Export Configuration</h3>
-                <div class="export-controls">
-                    <button id="exportConfig" class="btn btn-primary">Export Config JSON</button>
-                    <button id="importConfig" class="btn btn-secondary">Import Config</button>
-                    <input type="file" id="importFile" accept=".json" style="display: none;">
-                </div>
-                <textarea id="configOutput" class="config-output" placeholder="Configuration JSON will appear here..." readonly></textarea>
             </section>
         </main>
 
@@ -524,6 +111,30 @@
     </div>
 
     <script src="scripts.js"></script>
+    <script>
+        // Additional initialization for index page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Reset configuration handler
+            const resetButton = document.getElementById('resetConfig');
+            if (resetButton) {
+                resetButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to reset all settings to defaults?')) {
+                        sessionStorage.removeItem('smoothScrollConfig');
+                        location.reload();
+                    }
+                });
+            }
+            
+            // Test assertions
+            console.assert(document.getElementById('assets'), 'Assets info box missing');
+            console.assert(document.getElementById('configContainer'), 'Config container missing');
+            console.assert(document.getElementById('librarySelect'), 'Library selector missing');
+            console.assert(document.getElementById('masterToggle'), 'Master toggle missing');
+            
+            console.log('✅ Smooth Scroll Libraries Demo initialized successfully');
+        });
+    </script>
 </body>
 </html>
 

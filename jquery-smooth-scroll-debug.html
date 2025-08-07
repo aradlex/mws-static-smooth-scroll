@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Smooth Scroll - Debug</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .test-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; border: 2px dashed var(--border); margin: 2rem 0; border-radius: 1rem; position: relative; }
+        .test-section::before { content: attr(data-section); position: absolute; top: 1rem; left: 1rem; background: var(--primary-color); color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; }
+        .test-section:nth-child(even) { background: var(--surface); }
+        .animation-queue { max-height: 150px; overflow-y: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 0.5rem; padding: 1rem; margin: 1rem 0; }
+        .queue-item { padding: 0.5rem; margin: 0.25rem 0; background: var(--background); border-radius: 0.25rem; font-size: 0.8rem; }
+        .queue-active { background: var(--success-color); color: white; }
+        .easing-curve { width: 100%; height: 100px; background: var(--surface); border: 1px solid var(--border); border-radius: 0.5rem; margin: 1rem 0; position: relative; overflow: hidden; }
+        .curve-point { position: absolute; width: 4px; height: 4px; background: var(--primary-color); border-radius: 50%; }
+    </style>
+</head>
+<body>
+    <div class="debug-overlay" id="debugOverlay">
+        <div><strong>jQuery Debug</strong></div>
+        <div>Scroll: <span id="scrollY">0</span>px</div>
+        <div>Progress: <span id="scrollPercent">0</span>%</div>
+        <div>Queue Length: <span id="queueLength">0</span></div>
+        <div>Animation: <span id="animationStatus">Idle</span></div>
+        <div>Speed: <span id="currentSpeed">800ms</span></div>
+        <div>Easing: <span id="currentEasing">swing</span></div>
+        <div>Target: <span id="currentTarget">none</span></div>
+    </div>
+
+    <div class="debug-container">
+        <div class="debug-content">
+            <h1>🐛 jQuery Smooth Scroll Debug</h1>
+            <p>Real-time debugging and monitoring for jQuery Smooth Scroll with animation queue tracking.</p>
+            
+            <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border); margin: 2rem 0;">
+                <h3>📊 Animation Queue</h3>
+                <div class="animation-queue" id="animationQueue">
+                    <div>No animations in queue</div>
+                </div>
+                
+                <h3 style="margin-top: 2rem;">📈 Easing Curve Visualization</h3>
+                <div class="easing-curve" id="easingCurve"></div>
+            </div>
+            
+            <div class="test-section" data-section="Speed Test" id="section1">
+                <div>
+                    <h2>Animation Speed Test</h2>
+                    <p>Test different animation speeds and queue behavior.</p>
+                    <div style="margin-top: 1rem;">
+                        <button onclick="scrollWithSpeed(400, '#section2')" class="btn btn-primary" style="margin: 0.25rem;">Fast (400ms)</button>
+                        <button onclick="scrollWithSpeed(800, '#section2')" class="btn btn-primary" style="margin: 0.25rem;">Normal (800ms)</button>
+                        <button onclick="scrollWithSpeed(1500, '#section2')" class="btn btn-primary" style="margin: 0.25rem;">Slow (1500ms)</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="test-section" data-section="Easing Test" id="section2">
+                <div>
+                    <h2>Easing Function Test</h2>
+                    <p>Test different easing functions and their curves.</p>
+                    <div style="margin-top: 1rem;">
+                        <button onclick="scrollWithEasing('linear', '#section3')" class="btn btn-primary" style="margin: 0.25rem;">Linear</button>
+                        <button onclick="scrollWithEasing('swing', '#section3')" class="btn btn-primary" style="margin: 0.25rem;">Swing</button>
+                        <button onclick="scrollWithEasing('easeInOutQuad', '#section3')" class="btn btn-primary" style="margin: 0.25rem;">Ease In-Out</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="test-section" data-section="Callback Test" id="section3">
+                <div>
+                    <h2>Callback Execution Test</h2>
+                    <p>Test before and after scroll callbacks.</p>
+                    <a href="#section4" class="btn btn-primary smooth-link">Test Callbacks</a>
+                </div>
+            </div>
+            
+            <div class="test-section" data-section="Queue Test" id="section4">
+                <div>
+                    <h2>Animation Queue Test</h2>
+                    <p>Test multiple rapid scroll requests and queue management.</p>
+                    <button onclick="testQueue()" class="btn btn-primary">Test Queue</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="debug-panel">
+            <h3>🔍 Real-time Debug</h3>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">jQuery Status:</span>
+                <span class="debug-metric-value" id="debugStatus">Loading</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Scroll Position:</span>
+                <span class="debug-metric-value" id="debugScrollPos">0px</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Animation Speed:</span>
+                <span class="debug-metric-value" id="debugSpeed">800ms</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Easing Function:</span>
+                <span class="debug-metric-value" id="debugEasing">swing</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Queue Status:</span>
+                <span class="debug-metric-value" id="debugQueue">Empty</span>
+            </div>
+            
+            <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+            
+            <h4>Quick Actions</h4>
+            <button onclick="scrollToTop()" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">Scroll to Top</button>
+            <button onclick="scrollToBottom()" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">Scroll to Bottom</button>
+            <button onclick="stopAnimations()" class="btn btn-warning" style="width: 100%; margin-bottom: 0.5rem;">Stop Animations</button>
+            
+            <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+            
+            <div style="text-align: center;">
+                <a href="index.html" class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;">← Config</a>
+                <a href="jquery-smooth-scroll.html" class="btn btn-demo" style="width: 100%;">Demo →</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="libs/jquery.min.js"></script>
+    <script src="libs/jquery.smooth-scroll.min.js"></script>
+    <script>
+        let currentConfig = null;
+        let animationQueue = [];
+        let isAnimating = false;
+        
+        function initjQueryDebug() {
+            try {
+                const stored = sessionStorage.getItem('smoothScrollConfig');
+                if (stored) {
+                    const config = JSON.parse(stored);
+                    if (config.currentLibrary === 'jquery-smooth-scroll' && config.config && config.config['jquery-smooth-scroll']) {
+                        applyjQueryConfig(config.config['jquery-smooth-scroll'], config.isEnabled);
+                    }
+                }
+            } catch (error) {
+                console.warn('Error loading config:', error);
+                applyjQueryConfig({
+                    enable: true,
+                    speed: 800,
+                    easing: 'swing',
+                    offset: 0,
+                    autoFocus: false,
+                    preventDefault: true,
+                    targetLinks: 'all'
+                }, true);
+            }
+            
+            startScrollTracking();
+        }
+        
+        function applyjQueryConfig(config, isEnabled) {
+            if (!config || !config.enable || !isEnabled) {
+                destroyjQuery();
+                document.getElementById('debugStatus').textContent = 'Disabled';
+                return;
+            }
+            
+            if (typeof jQuery === 'undefined') {
+                setTimeout(() => applyjQueryConfig(config, isEnabled), 100);
+                return;
+            }
+            
+            destroyjQuery();
+            
+            const $ = jQuery;
+            currentConfig = config;
+            
+            const targetSelector = config.targetLinks === 'custom' && config.customSelector
+                ? config.customSelector
+                : 'a[href^="#"]';
+            
+            const smoothScrollConfig = {
+                speed: config.speed || 800,
+                easing: config.easing || 'swing',
+                offset: config.offset || 0,
+                autoFocus: config.autoFocus || false,
+                preventDefault: config.preventDefault !== false,
+                beforeScroll: function() {
+                    isAnimating = true;
+                    document.getElementById('animationStatus').textContent = 'Running';
+                    addToQueue('beforeScroll', 'Animation started');
+                    updateQueueDisplay();
+                },
+                afterScroll: function() {
+                    isAnimating = false;
+                    document.getElementById('animationStatus').textContent = 'Idle';
+                    addToQueue('afterScroll', 'Animation completed');
+                    updateQueueDisplay();
+                }
+            };
+            
+            $(targetSelector).smoothScroll(smoothScrollConfig);
+            
+            // Update debug info
+            document.getElementById('debugStatus').textContent = 'Active';
+            document.getElementById('debugSpeed').textContent = (config.speed || 800) + 'ms';
+            document.getElementById('debugEasing').textContent = config.easing || 'swing';
+            document.getElementById('currentSpeed').textContent = (config.speed || 800) + 'ms';
+            document.getElementById('currentEasing').textContent = config.easing || 'swing';
+            
+            // Draw easing curve
+            drawEasingCurve(config.easing || 'swing');
+            
+            console.log('jQuery Smooth Scroll debug initialized:', config);
+        }
+        
+        function addToQueue(type, message) {
+            const timestamp = new Date().toLocaleTimeString();
+            animationQueue.push({
+                type,
+                message,
+                timestamp,
+                id: Date.now()
+            });
+            
+            // Keep only last 10 items
+            if (animationQueue.length > 10) {
+                animationQueue.shift();
+            }
+            
+            document.getElementById('queueLength').textContent = animationQueue.length;
+        }
+        
+        function updateQueueDisplay() {
+            const queueContainer = document.getElementById('animationQueue');
+            
+            if (animationQueue.length === 0) {
+                queueContainer.innerHTML = '<div>No animations in queue</div>';
+                document.getElementById('debugQueue').textContent = 'Empty';
+                return;
+            }
+            
+            let html = '';
+            animationQueue.forEach((item, index) => {
+                const isActive = index === animationQueue.length - 1 && isAnimating;
+                const className = isActive ? 'queue-item queue-active' : 'queue-item';
+                
+                html += `<div class="${className}">`;
+                html += `[${item.timestamp}] ${item.type}: ${item.message}`;
+                html += `</div>`;
+            });
+            
+            queueContainer.innerHTML = html;
+            document.getElementById('debugQueue').textContent = isAnimating ? 'Active' : 'Idle';
+        }
+        
+        function drawEasingCurve(easing) {
+            const curve = document.getElementById('easingCurve');
+            curve.innerHTML = '';
+            
+            const width = curve.offsetWidth;
+            const height = curve.offsetHeight;
+            
+            // Simple easing function approximations for visualization
+            const easingFunctions = {
+                linear: t => t,
+                swing: t => 0.5 - Math.cos(t * Math.PI) / 2,
+                easeInOutQuad: t => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
+            };
+            
+            const easingFunc = easingFunctions[easing] || easingFunctions.swing;
+            
+            for (let i = 0; i <= 50; i++) {
+                const t = i / 50;
+                const easedT = easingFunc(t);
+                
+                const point = document.createElement('div');
+                point.className = 'curve-point';
+                point.style.left = (t * (width - 4)) + 'px';
+                point.style.bottom = (easedT * (height - 4)) + 'px';
+                
+                curve.appendChild(point);
+            }
+        }
+        
+        function startScrollTracking() {
+            window.addEventListener('scroll', () => {
+                const scrollY = window.pageYOffset;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = Math.round((scrollY / docHeight) * 100);
+                
+                document.getElementById('scrollY').textContent = Math.round(scrollY);
+                document.getElementById('scrollPercent').textContent = scrollPercent;
+                document.getElementById('debugScrollPos').textContent = Math.round(scrollY) + 'px';
+            });
+        }
+        
+        function scrollWithSpeed(speed, target) {
+            if (typeof jQuery === 'undefined') return;
+            
+            const $ = jQuery;
+            const targetElement = $(target);
+            
+            if (targetElement.length) {
+                document.getElementById('currentTarget').textContent = target;
+                addToQueue('customScroll', `Scrolling to ${target} at ${speed}ms`);
+                updateQueueDisplay();
+                
+                $('html, body').animate({
+                    scrollTop: targetElement.offset().top
+                }, {
+                    duration: speed,
+                    easing: currentConfig?.easing || 'swing',
+                    start: function() {
+                        isAnimating = true;
+                        document.getElementById('animationStatus').textContent = 'Running';
+                    },
+                    complete: function() {
+                        isAnimating = false;
+                        document.getElementById('animationStatus').textContent = 'Idle';
+                        addToQueue('customScroll', `Scroll to ${target} completed`);
+                        updateQueueDisplay();
+                    }
+                });
+            }
+        }
+        
+        function scrollWithEasing(easing, target) {
+            if (typeof jQuery === 'undefined') return;
+            
+            const $ = jQuery;
+            const targetElement = $(target);
+            
+            if (targetElement.length) {
+                document.getElementById('currentTarget').textContent = target;
+                document.getElementById('currentEasing').textContent = easing;
+                drawEasingCurve(easing);
+                
+                addToQueue('easingTest', `Testing ${easing} easing to ${target}`);
+                updateQueueDisplay();
+                
+                $('html, body').animate({
+                    scrollTop: targetElement.offset().top
+                }, {
+                    duration: currentConfig?.speed || 800,
+                    easing: easing,
+                    start: function() {
+                        isAnimating = true;
+                        document.getElementById('animationStatus').textContent = 'Running';
+                    },
+                    complete: function() {
+                        isAnimating = false;
+                        document.getElementById('animationStatus').textContent = 'Idle';
+                        addToQueue('easingTest', `${easing} easing test completed`);
+                        updateQueueDisplay();
+                    }
+                });
+            }
+        }
+        
+        function testQueue() {
+            if (typeof jQuery === 'undefined') return;
+            
+            const targets = ['#section1', '#section2', '#section3', '#section4'];
+            
+            targets.forEach((target, index) => {
+                setTimeout(() => {
+                    addToQueue('queueTest', `Queuing scroll to ${target}`);
+                    scrollWithSpeed(600, target);
+                }, index * 200);
+            });
+        }
+        
+        function scrollToTop() {
+            if (typeof jQuery === 'undefined') return;
+            
+            const $ = jQuery;
+            $('html, body').animate({ scrollTop: 0 }, currentConfig?.speed || 800);
+        }
+        
+        function scrollToBottom() {
+            if (typeof jQuery === 'undefined') return;
+            
+            const $ = jQuery;
+            const docHeight = $(document).height() - $(window).height();
+            $('html, body').animate({ scrollTop: docHeight }, currentConfig?.speed || 800);
+        }
+        
+        function stopAnimations() {
+            if (typeof jQuery === 'undefined') return;
+            
+            const $ = jQuery;
+            $('html, body').stop(true, false);
+            isAnimating = false;
+            document.getElementById('animationStatus').textContent = 'Stopped';
+            addToQueue('control', 'All animations stopped');
+            updateQueueDisplay();
+        }
+        
+        function destroyjQuery() {
+            if (typeof jQuery !== 'undefined') {
+                jQuery('a[href^="#"]').off('click.smoothScroll');
+                jQuery('html, body').stop(true, false);
+            }
+            
+            animationQueue = [];
+            isAnimating = false;
+        }
+        
+        // Initialize when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initjQueryDebug);
+        } else {
+            initjQueryDebug();
+        }
+        
+        window.addEventListener('beforeunload', destroyjQuery);
+    </script>
+</body>
+</html>
+

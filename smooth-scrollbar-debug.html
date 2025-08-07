@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smooth Scrollbar - Debug</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { height: auto; overflow: hidden; }
+        .scrollbar-container { height: 100vh; overflow: hidden; }
+        .test-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; border: 2px dashed var(--border); margin: 2rem 0; border-radius: 1rem; position: relative; }
+        .test-section::before { content: attr(data-section); position: absolute; top: 1rem; left: 1rem; background: var(--primary-color); color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; }
+        .test-section:nth-child(even) { background: var(--surface); }
+        .damping-chart { width: 100%; height: 60px; background: var(--surface); border: 1px solid var(--border); border-radius: 0.5rem; margin: 1rem 0; position: relative; overflow: hidden; }
+        .damping-bar { position: absolute; bottom: 0; width: 2px; background: var(--primary-color); transition: height 0.1s ease; }
+        .debug-panel { z-index: 1001; }
+        .debug-overlay { z-index: 1002; }
+    </style>
+</head>
+<body>
+    <div class="debug-overlay" id="debugOverlay">
+        <div><strong>Scrollbar Debug</strong></div>
+        <div>Scroll: <span id="scrollY">0</span>px</div>
+        <div>Progress: <span id="scrollPercent">0</span>%</div>
+        <div>Damping: <span id="dampingValue">0.1</span></div>
+        <div>Velocity: <span id="velocity">0</span></div>
+        <div>Overscroll: <span id="overscroll">No</span></div>
+        <div>Touch Active: <span id="touchActive">No</span></div>
+        <div>Thumb Size: <span id="thumbSize">20px</span></div>
+    </div>
+
+    <div class="scrollbar-container" id="scrollbarContainer">
+        <div class="debug-container">
+            <div class="debug-content">
+                <h1>🐛 Smooth Scrollbar Debug</h1>
+                <p>Advanced debugging and monitoring for Smooth Scrollbar with real-time metrics.</p>
+                
+                <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border); margin: 2rem 0;">
+                    <h3>📊 Damping Visualization</h3>
+                    <div class="damping-chart" id="dampingChart"></div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                        <div class="debug-metric">
+                            <span class="debug-metric-label">Current Velocity:</span>
+                            <span class="debug-metric-value" id="currentVelocity">0</span>
+                        </div>
+                        <div class="debug-metric">
+                            <span class="debug-metric-label">Max Velocity:</span>
+                            <span class="debug-metric-value" id="maxVelocity">0</span>
+                        </div>
+                        <div class="debug-metric">
+                            <span class="debug-metric-label">Scroll State:</span>
+                            <span class="debug-metric-value" id="scrollState">Idle</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="test-section" data-section="Damping Test" id="section1">
+                    <div>
+                        <h2>Damping Effect Test</h2>
+                        <p>Test the damping effect by scrolling quickly through this section.</p>
+                        <button onclick="scrollToNext()" class="btn btn-primary">Scroll to Next</button>
+                    </div>
+                </div>
+                
+                <div class="test-section" data-section="Momentum Test" id="section2">
+                    <div>
+                        <h2>Momentum Scrolling Test</h2>
+                        <p>Test momentum scrolling and overscroll effects.</p>
+                        <button onclick="scrollToNext()" class="btn btn-primary">Scroll to Next</button>
+                    </div>
+                </div>
+                
+                <div class="test-section" data-section="Touch Test" id="section3">
+                    <div>
+                        <h2>Touch Interaction Test</h2>
+                        <p>Test touch gestures and mobile scrolling behavior.</p>
+                        <button onclick="scrollToNext()" class="btn btn-primary">Scroll to Next</button>
+                    </div>
+                </div>
+                
+                <div class="test-section" data-section="Performance Test" id="section4">
+                    <div>
+                        <h2>Performance Monitoring</h2>
+                        <p>Monitor scrollbar performance and rendering metrics.</p>
+                        <button onclick="scrollToTop()" class="btn btn-primary">Back to Top</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="debug-panel">
+                <h3>🔍 Real-time Debug</h3>
+                
+                <div class="debug-metric">
+                    <span class="debug-metric-label">Scrollbar Status:</span>
+                    <span class="debug-metric-value" id="debugStatus">Loading</span>
+                </div>
+                
+                <div class="debug-metric">
+                    <span class="debug-metric-label">Scroll Position:</span>
+                    <span class="debug-metric-value" id="debugScrollPos">0px</span>
+                </div>
+                
+                <div class="debug-metric">
+                    <span class="debug-metric-label">Damping Factor:</span>
+                    <span class="debug-metric-value" id="debugDamping">0.1</span>
+                </div>
+                
+                <div class="debug-metric">
+                    <span class="debug-metric-label">Render Mode:</span>
+                    <span class="debug-metric-value" id="debugRenderMode">CSS</span>
+                </div>
+                
+                <div class="debug-metric">
+                    <span class="debug-metric-label">Overscroll:</span>
+                    <span class="debug-metric-value" id="debugOverscroll">Disabled</span>
+                </div>
+                
+                <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+                
+                <h4>Quick Actions</h4>
+                <button onclick="scrollToTop()" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">Scroll to Top</button>
+                <button onclick="scrollToBottom()" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">Scroll to Bottom</button>
+                <button onclick="testMomentum()" class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;">Test Momentum</button>
+                
+                <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+                
+                <div style="text-align: center;">
+                    <a href="index.html" class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;">← Config</a>
+                    <a href="smooth-scrollbar.html" class="btn btn-demo" style="width: 100%;">Demo →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="libs/smooth-scrollbar.min.js"></script>
+    <script>
+        let scrollbarInstance = null;
+        let currentConfig = null;
+        let debugState = {
+            velocityHistory: [],
+            maxVelocity: 0,
+            isScrolling: false,
+            touchActive: false
+        };
+        
+        function initScrollbarDebug() {
+            try {
+                const stored = sessionStorage.getItem('smoothScrollConfig');
+                if (stored) {
+                    const config = JSON.parse(stored);
+                    if (config.currentLibrary === 'smooth-scrollbar' && config.config && config.config['smooth-scrollbar']) {
+                        applyScrollbarConfig(config.config['smooth-scrollbar'], config.isEnabled);
+                    }
+                }
+            } catch (error) {
+                console.warn('Error loading config:', error);
+                applyScrollbarConfig({
+                    enable: true,
+                    damping: 0.1,
+                    thumbMinSize: 20,
+                    renderByPixels: false,
+                    alwaysShowTracks: false,
+                    continuousScrolling: false,
+                    overscrollEffect: false,
+                    disableTouch: false
+                }, true);
+            }
+        }
+        
+        function applyScrollbarConfig(config, isEnabled) {
+            if (!config || !config.enable || !isEnabled) {
+                destroyScrollbar();
+                document.getElementById('debugStatus').textContent = 'Disabled';
+                return;
+            }
+            
+            if (config.disableTouch && 'ontouchstart' in window) {
+                destroyScrollbar();
+                document.getElementById('debugStatus').textContent = 'Disabled (Touch)';
+                return;
+            }
+            
+            if (typeof Scrollbar === 'undefined') {
+                setTimeout(() => applyScrollbarConfig(config, isEnabled), 100);
+                return;
+            }
+            
+            destroyScrollbar();
+            
+            const container = document.getElementById('scrollbarContainer');
+            if (!container) {
+                console.error('Scrollbar container not found');
+                return;
+            }
+            
+            const scrollbarConfig = {
+                damping: config.damping || 0.1,
+                thumbMinSize: config.thumbMinSize || 20,
+                renderByPixels: config.renderByPixels || false,
+                alwaysShowTracks: config.alwaysShowTracks || false,
+                continuousScrolling: config.continuousScrolling || false
+            };
+            
+            scrollbarInstance = Scrollbar.init(container, scrollbarConfig);
+            currentConfig = config;
+            
+            // Update debug info
+            document.getElementById('debugStatus').textContent = 'Active';
+            document.getElementById('debugDamping').textContent = config.damping || '0.1';
+            document.getElementById('debugRenderMode').textContent = config.renderByPixels ? 'Pixels' : 'CSS';
+            document.getElementById('debugOverscroll').textContent = config.overscrollEffect ? 'Enabled' : 'Disabled';
+            document.getElementById('dampingValue').textContent = config.damping || '0.1';
+            document.getElementById('thumbSize').textContent = (config.thumbMinSize || 20) + 'px';
+            
+            // Set up event listeners
+            scrollbarInstance.addListener(updateScrollInfo);
+            
+            // Touch event listeners
+            container.addEventListener('touchstart', () => {
+                debugState.touchActive = true;
+                document.getElementById('touchActive').textContent = 'Yes';
+            });
+            
+            container.addEventListener('touchend', () => {
+                debugState.touchActive = false;
+                document.getElementById('touchActive').textContent = 'No';
+            });
+            
+            console.log('Smooth Scrollbar debug initialized:', config);
+        }
+        
+        function updateScrollInfo(status) {
+            const scrollTop = status.offset.y;
+            const scrollLeft = status.offset.x;
+            const limit = status.limit;
+            const progress = Math.round((scrollTop / limit.y) * 100);
+            
+            // Calculate velocity (approximate)
+            const velocity = Math.abs(scrollTop - (debugState.lastScrollTop || 0));
+            debugState.lastScrollTop = scrollTop;
+            
+            // Update overlay
+            document.getElementById('scrollY').textContent = Math.round(scrollTop);
+            document.getElementById('scrollPercent').textContent = progress;
+            document.getElementById('velocity').textContent = Math.round(velocity);
+            
+            // Update debug panel
+            document.getElementById('debugScrollPos').textContent = Math.round(scrollTop) + 'px';
+            document.getElementById('currentVelocity').textContent = Math.round(velocity);
+            
+            // Track max velocity
+            if (velocity > debugState.maxVelocity) {
+                debugState.maxVelocity = velocity;
+                document.getElementById('maxVelocity').textContent = Math.round(velocity);
+            }
+            
+            // Update scroll state
+            const isScrolling = velocity > 1;
+            if (isScrolling !== debugState.isScrolling) {
+                debugState.isScrolling = isScrolling;
+                document.getElementById('scrollState').textContent = isScrolling ? 'Scrolling' : 'Idle';
+            }
+            
+            // Update damping chart
+            updateDampingChart(velocity);
+            
+            // Check for overscroll
+            const isOverscrolling = scrollTop < 0 || scrollTop > limit.y;
+            document.getElementById('overscroll').textContent = isOverscrolling ? 'Yes' : 'No';
+        }
+        
+        function updateDampingChart(velocity) {
+            const chart = document.getElementById('dampingChart');
+            const bar = document.createElement('div');
+            bar.className = 'damping-bar';
+            bar.style.left = (chart.children.length * 2) + 'px';
+            bar.style.height = Math.min(velocity * 2, 60) + 'px';
+            
+            chart.appendChild(bar);
+            
+            if (chart.children.length > 100) {
+                chart.removeChild(chart.firstChild);
+                Array.from(chart.children).forEach((child, index) => {
+                    child.style.left = (index * 2) + 'px';
+                });
+            }
+        }
+        
+        function scrollToTop() {
+            if (scrollbarInstance) {
+                scrollbarInstance.scrollTo(0, 0, 1000);
+            }
+        }
+        
+        function scrollToBottom() {
+            if (scrollbarInstance) {
+                const limit = scrollbarInstance.limit;
+                scrollbarInstance.scrollTo(0, limit.y, 1000);
+            }
+        }
+        
+        function scrollToNext() {
+            if (scrollbarInstance) {
+                const currentScroll = scrollbarInstance.offset.y;
+                scrollbarInstance.scrollTo(0, currentScroll + window.innerHeight, 800);
+            }
+        }
+        
+        function testMomentum() {
+            if (!scrollbarInstance) return;
+            
+            const sections = [0, window.innerHeight, window.innerHeight * 2, window.innerHeight * 3];
+            let currentIndex = 0;
+            
+            function scrollToNextSection() {
+                if (currentIndex < sections.length) {
+                    scrollbarInstance.scrollTo(0, sections[currentIndex], 1000);
+                    currentIndex++;
+                    setTimeout(scrollToNextSection, 1500);
+                }
+            }
+            
+            scrollToNextSection();
+        }
+        
+        function destroyScrollbar() {
+            if (scrollbarInstance) {
+                scrollbarInstance.destroy();
+                scrollbarInstance = null;
+            }
+            
+            // Reset debug state
+            debugState = {
+                velocityHistory: [],
+                maxVelocity: 0,
+                isScrolling: false,
+                touchActive: false
+            };
+        }
+        
+        // Initialize when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initScrollbarDebug);
+        } else {
+            initScrollbarDebug();
+        }
+        
+        window.addEventListener('beforeunload', destroyScrollbar);
+    </script>
+</body>
+</html>
+

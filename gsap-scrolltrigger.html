@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSAP ScrollTrigger - Demo</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .trigger-element {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .scale-in {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+        
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+        
+        .animation-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin: 4rem 0;
+        }
+        
+        .animation-card {
+            background: var(--surface);
+            padding: 3rem 2rem;
+            border-radius: 1.5rem;
+            border: 1px solid var(--border);
+            text-align: center;
+            position: relative;
+        }
+        
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            z-index: 1000;
+            transform-origin: left;
+            transform: scaleX(0);
+        }
+        
+        .counter-section {
+            background: var(--surface);
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .counter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .counter-item {
+            padding: 2rem;
+            background: var(--background);
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+        }
+        
+        .counter-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+        }
+        
+        .counter-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <nav class="demo-nav">
+        <h3>🧭 Navigation</h3>
+        <ul>
+            <li><a href="#hero">Hero</a></li>
+            <li><a href="#animations">Animations</a></li>
+            <li><a href="#counters">Counters</a></li>
+            <li><a href="#testimonials">Testimonials</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+            <a href="gsap-scrolltrigger-debug.html" class="btn btn-debug" style="width: 100%; text-align: center;">Debug View</a>
+        </div>
+    </nav>
+
+    <a href="index.html" class="back-to-config">⚙️ Back to Config</a>
+
+    <section id="hero" class="hero-section">
+        <div class="hero-content trigger-element">
+            <h1>GSAP ScrollTrigger</h1>
+            <p>Unleash the power of professional-grade scroll-triggered animations with GSAP ScrollTrigger - the industry standard for creating stunning, performant scroll-based experiences.</p>
+            <a href="#animations" class="cta-button">Explore Animations</a>
+        </div>
+    </section>
+
+    <section id="animations" class="demo-section">
+        <div class="demo-container">
+            <h2 class="trigger-element">🎬 Animation Showcase</h2>
+            <p class="trigger-element">GSAP ScrollTrigger enables precise control over scroll-based animations with professional-grade performance.</p>
+            
+            <div class="animation-showcase">
+                <div class="animation-card fade-in">
+                    <span style="font-size: 3rem; margin-bottom: 1rem; display: block;">✨</span>
+                    <h3>Fade In Animation</h3>
+                    <p>Elements smoothly fade in as they enter the viewport with customizable timing and easing.</p>
+                </div>
+                
+                <div class="animation-card scale-in">
+                    <span style="font-size: 3rem; margin-bottom: 1rem; display: block;">🔍</span>
+                    <h3>Scale Animation</h3>
+                    <p>Dynamic scaling effects that create depth and visual interest as content comes into view.</p>
+                </div>
+                
+                <div class="animation-card slide-in-left">
+                    <span style="font-size: 3rem; margin-bottom: 1rem; display: block;">⬅️</span>
+                    <h3>Slide From Left</h3>
+                    <p>Smooth sliding animations from the left side with momentum and natural easing curves.</p>
+                </div>
+                
+                <div class="animation-card slide-in-right">
+                    <span style="font-size: 3rem; margin-bottom: 1rem; display: block;">➡️</span>
+                    <h3>Slide From Right</h3>
+                    <p>Elegant right-to-left sliding animations that create dynamic content reveals.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="counters" class="counter-section">
+        <div class="demo-container">
+            <h2 class="trigger-element">📊 Animated Counters</h2>
+            <p class="trigger-element">Watch these numbers animate when they come into view, powered by GSAP's smooth interpolation.</p>
+            
+            <div class="counter-grid">
+                <div class="counter-item trigger-element">
+                    <span class="counter-value" data-target="1000">0</span>
+                    <div class="counter-label">Projects Completed</div>
+                </div>
+                
+                <div class="counter-item trigger-element">
+                    <span class="counter-value" data-target="500">0</span>
+                    <div class="counter-label">Happy Clients</div>
+                </div>
+                
+                <div class="counter-item trigger-element">
+                    <span class="counter-value" data-target="50">0</span>
+                    <div class="counter-label">Team Members</div>
+                </div>
+                
+                <div class="counter-item trigger-element">
+                    <span class="counter-value" data-target="99">0</span>
+                    <div class="counter-label">Success Rate %</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="demo-section">
+        <div class="demo-container">
+            <h2 class="trigger-element">💬 What Developers Say</h2>
+            <p class="trigger-element">Here's what web developers think about GSAP ScrollTrigger:</p>
+            
+            <div style="display: grid; gap: 2rem; margin: 3rem 0;">
+                <div class="trigger-element" style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                    <p style="font-style: italic; margin-bottom: 1rem;">"GSAP ScrollTrigger is the gold standard for scroll animations. The precision and performance are unmatched."</p>
+                    <div style="font-weight: 600; color: var(--primary-color);">— Jake Wilson, Creative Developer</div>
+                </div>
+                
+                <div class="trigger-element" style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                    <p style="font-style: italic; margin-bottom: 1rem;">"The animation possibilities are endless. ScrollTrigger makes complex scroll-based interactions feel effortless to implement."</p>
+                    <div style="font-weight: 600; color: var(--primary-color);">— Lisa Chen, UI/UX Engineer</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="demo-section">
+        <div class="demo-container">
+            <h2 class="trigger-element">🚀 Get Started with GSAP ScrollTrigger</h2>
+            <p class="trigger-element">Ready to create professional scroll animations? Here's everything you need to get started.</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0;">
+                <div class="trigger-element" style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                    <h3>🚀 Quick Start</h3>
+                    <pre style="background: var(--background); padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.8rem;"><code>// Load GSAP and ScrollTrigger
+&lt;script src="libs/gsap.min.js"&gt;&lt;/script&gt;
+&lt;script src="libs/ScrollTrigger.min.js"&gt;&lt;/script&gt;</code></pre>
+                </div>
+                
+                <div class="trigger-element" style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                    <h3>⚙️ Basic Animation</h3>
+                    <pre style="background: var(--background); padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.8rem;"><code>gsap.registerPlugin(ScrollTrigger);
+
+gsap.fromTo(".fade-in", 
+  { opacity: 0, y: 50 },
+  {
+    opacity: 1,
+    y: 0,
+    duration: 1,
+    scrollTrigger: {
+      trigger: ".fade-in",
+      start: "top 80%",
+      end: "bottom 20%"
+    }
+  }
+);</code></pre>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;" class="trigger-element">
+                <a href="https://greensock.com/scrolltrigger/" target="_blank" class="btn btn-primary" style="margin-right: 1rem;">View Documentation</a>
+                <a href="gsap-scrolltrigger-debug.html" class="btn btn-debug">Debug This Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="demo-section" style="background: var(--surface); border-top: 1px solid var(--border);">
+        <div class="demo-container text-center">
+            <h3 class="trigger-element">GSAP ScrollTrigger Demo</h3>
+            <p class="trigger-element">Professional-grade scroll animations with industry-leading performance.</p>
+            <p class="trigger-element">
+                <a href="index.html">← Back to Configuration</a> |
+                <a href="gsap-scrolltrigger-debug.html">Debug View →</a>
+            </p>
+            <p style="margin-top: 2rem; color: var(--text-muted); font-size: 0.875rem;" class="trigger-element">
+                Scroll to top: <a href="#hero">🔝</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="libs/gsap.min.js"></script>
+    <script src="libs/ScrollTrigger.min.js"></script>
+    <script>
+        let gsapInitialized = false;
+        let currentConfig = null;
+        
+        function initGSAPDemo() {
+            // Load configuration from sessionStorage
+            try {
+                const stored = sessionStorage.getItem('smoothScrollConfig');
+                if (stored) {
+                    const config = JSON.parse(stored);
+                    if (config.currentLibrary === 'gsap-scrolltrigger' && config.config && config.config['gsap-scrolltrigger']) {
+                        applyGSAPConfig(config.config['gsap-scrolltrigger'], config.isEnabled);
+                    }
+                }
+            } catch (error) {
+                console.warn('Error loading config:', error);
+                applyGSAPConfig({
+                    enable: true,
+                    duration: 1,
+                    effects: 'fade',
+                    triggerElements: '.trigger-element',
+                    start: 'top 80%',
+                    end: 'bottom 20%',
+                    scrub: false,
+                    markers: false
+                }, true);
+            }
+        }
+        
+        function applyGSAPConfig(config, isEnabled) {
+            if (!config || !config.enable || !isEnabled) {
+                destroyGSAP();
+                return;
+            }
+            
+            if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+                setTimeout(() => applyGSAPConfig(config, isEnabled), 100);
+                return;
+            }
+            
+            destroyGSAP();
+            gsap.registerPlugin(ScrollTrigger);
+            
+            currentConfig = config;
+            gsapInitialized = true;
+            
+            // Create scroll progress bar
+            createProgressBar();
+            
+            // Apply animations based on effects setting
+            if (config.effects !== 'none') {
+                createScrollAnimations(config);
+            }
+            
+            // Create counter animations
+            createCounterAnimations(config);
+            
+            console.log('GSAP ScrollTrigger initialized with config:', config);
+        }
+        
+        function createProgressBar() {
+            const progressBar = document.getElementById('progressBar');
+            if (progressBar) {
+                gsap.to(progressBar, {
+                    scaleX: 1,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: document.body,
+                        start: "top top",
+                        end: "bottom bottom",
+                        scrub: true
+                    }
+                });
+            }
+        }
+        
+        function createScrollAnimations(config) {
+            const elements = document.querySelectorAll(config.triggerElements || '.trigger-element');
+            
+            elements.forEach(element => {
+                let fromVars = {};
+                let toVars = {
+                    duration: config.duration || 1,
+                    scrollTrigger: {
+                        trigger: element,
+                        start: config.start || 'top 80%',
+                        end: config.end || 'bottom 20%',
+                        scrub: config.scrub || false,
+                        markers: config.markers || false
+                    }
+                };
+                
+                // Apply effect based on configuration or element class
+                if (element.classList.contains('fade-in')) {
+                    fromVars = { opacity: 0, y: 30 };
+                    toVars.opacity = 1;
+                    toVars.y = 0;
+                } else if (element.classList.contains('scale-in')) {
+                    fromVars = { opacity: 0, scale: 0.8 };
+                    toVars.opacity = 1;
+                    toVars.scale = 1;
+                } else if (element.classList.contains('slide-in-left')) {
+                    fromVars = { opacity: 0, x: -50 };
+                    toVars.opacity = 1;
+                    toVars.x = 0;
+                } else if (element.classList.contains('slide-in-right')) {
+                    fromVars = { opacity: 0, x: 50 };
+                    toVars.opacity = 1;
+                    toVars.x = 0;
+                } else {
+                    // Default animation based on config
+                    switch (config.effects) {
+                        case 'fade':
+                            fromVars = { opacity: 0, y: 30 };
+                            toVars.opacity = 1;
+                            toVars.y = 0;
+                            break;
+                        case 'scale':
+                            fromVars = { opacity: 0, scale: 0.8 };
+                            toVars.opacity = 1;
+                            toVars.scale = 1;
+                            break;
+                        case 'slide':
+                            fromVars = { opacity: 0, x: -50 };
+                            toVars.opacity = 1;
+                            toVars.x = 0;
+                            break;
+                    }
+                }
+                
+                gsap.fromTo(element, fromVars, toVars);
+            });
+        }
+        
+        function createCounterAnimations(config) {
+            document.querySelectorAll('.counter-value[data-target]').forEach(counter => {
+                const target = parseInt(counter.dataset.target);
+                
+                gsap.fromTo(counter, 
+                    { textContent: 0 },
+                    {
+                        textContent: target,
+                        duration: 2,
+                        ease: "power2.out",
+                        snap: { textContent: 1 },
+                        scrollTrigger: {
+                            trigger: counter,
+                            start: "top 80%",
+                            toggleActions: "play none none reverse"
+                        }
+                    }
+                );
+            });
+        }
+        
+        function destroyGSAP() {
+            if (gsapInitialized && typeof ScrollTrigger !== 'undefined') {
+                ScrollTrigger.killAll();
+                gsapInitialized = false;
+            }
+        }
+        
+        // Initialize when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initGSAPDemo);
+        } else {
+            initGSAPDemo();
+        }
+        
+        window.addEventListener('beforeunload', destroyGSAP);
+    </script>
+</body>
+</html>
+

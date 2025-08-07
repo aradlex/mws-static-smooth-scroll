@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSAP ScrollTrigger - Debug</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .trigger-element { opacity: 0; transform: translateY(50px); }
+        .test-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; border: 2px dashed var(--border); margin: 2rem 0; border-radius: 1rem; position: relative; }
+        .test-section::before { content: attr(data-section); position: absolute; top: 1rem; left: 1rem; background: var(--primary-color); color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; }
+        .test-section:nth-child(even) { background: var(--surface); }
+        .triggers-list { max-height: 200px; overflow-y: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 0.5rem; padding: 1rem; margin: 1rem 0; }
+        .trigger-item { padding: 0.5rem; margin: 0.25rem 0; background: var(--background); border-radius: 0.25rem; font-size: 0.8rem; }
+        .trigger-active { background: var(--primary-color); color: white; }
+    </style>
+</head>
+<body>
+    <div class="debug-overlay" id="debugOverlay">
+        <div><strong>GSAP ScrollTrigger Debug</strong></div>
+        <div>Scroll: <span id="scrollY">0</span>px</div>
+        <div>Progress: <span id="scrollPercent">0</span>%</div>
+        <div>Active Triggers: <span id="activeTriggers">0</span></div>
+        <div>Total Triggers: <span id="totalTriggers">0</span></div>
+        <div>Refresh Count: <span id="refreshCount">0</span></div>
+        <div>Markers: <span id="markersEnabled">Off</span></div>
+        <div>Scrub Mode: <span id="scrubMode">Off</span></div>
+    </div>
+
+    <div class="debug-container">
+        <div class="debug-content">
+            <h1 class="trigger-element">🐛 GSAP ScrollTrigger Debug</h1>
+            <p class="trigger-element">Advanced debugging and monitoring for GSAP ScrollTrigger animations.</p>
+            
+            <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border); margin: 2rem 0;">
+                <h3>📊 ScrollTrigger Analytics</h3>
+                <div class="triggers-list" id="triggersList">
+                    <div>Loading ScrollTrigger instances...</div>
+                </div>
+            </div>
+            
+            <div class="test-section trigger-element" data-section="Fade Test" id="section1">
+                <div>
+                    <h2>Fade Animation Test</h2>
+                    <p>This section tests fade-in animations with ScrollTrigger.</p>
+                    <a href="#section2" class="btn btn-primary">Next Section</a>
+                </div>
+            </div>
+            
+            <div class="test-section trigger-element" data-section="Scale Test" id="section2">
+                <div>
+                    <h2>Scale Animation Test</h2>
+                    <p>Testing scale animations with custom timing.</p>
+                    <a href="#section3" class="btn btn-primary">Next Section</a>
+                </div>
+            </div>
+            
+            <div class="test-section trigger-element" data-section="Slide Test" id="section3">
+                <div>
+                    <h2>Slide Animation Test</h2>
+                    <p>Testing slide animations with different directions.</p>
+                    <a href="#section4" class="btn btn-primary">Next Section</a>
+                </div>
+            </div>
+            
+            <div class="test-section trigger-element" data-section="Pin Test" id="section4">
+                <div>
+                    <h2>Pin Animation Test</h2>
+                    <p>Testing pin functionality and scrub animations.</p>
+                    <a href="#section1" class="btn btn-primary">Back to Start</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="debug-panel">
+            <h3>🔍 Real-time Debug</h3>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">GSAP Status:</span>
+                <span class="debug-metric-value" id="debugStatus">Loading</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">ScrollTrigger:</span>
+                <span class="debug-metric-value" id="debugScrollTrigger">Initializing</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Animation Progress:</span>
+                <span class="debug-metric-value" id="debugProgress">0%</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Current Effect:</span>
+                <span class="debug-metric-value" id="debugEffect">None</span>
+            </div>
+            
+            <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+            
+            <h4>Quick Actions</h4>
+            <button onclick="refreshScrollTrigger()" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">Refresh ScrollTrigger</button>
+            <button onclick="toggleMarkers()" class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;">Toggle Markers</button>
+            <button onclick="killAllTriggers()" class="btn btn-warning" style="width: 100%; margin-bottom: 0.5rem;">Kill All Triggers</button>
+            
+            <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+            
+            <div style="text-align: center;">
+                <a href="index.html" class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;">← Config</a>
+                <a href="gsap-scrolltrigger.html" class="btn btn-demo" style="width: 100%;">Demo →</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="libs/gsap.min.js"></script>
+    <script src="libs/ScrollTrigger.min.js"></script>
+    <script>
+        let gsapInitialized = false;
+        let currentConfig = null;
+        let refreshCount = 0;
+        let markersVisible = false;
+        
+        function initGSAPDebug() {
+            try {
+                const stored = sessionStorage.getItem('smoothScrollConfig');
+                if (stored) {
+                    const config = JSON.parse(stored);
+                    if (config.currentLibrary === 'gsap-scrolltrigger' && config.config && config.config['gsap-scrolltrigger']) {
+                        applyGSAPConfig(config.config['gsap-scrolltrigger'], config.isEnabled);
+                    }
+                }
+            } catch (error) {
+                console.warn('Error loading config:', error);
+                applyGSAPConfig({
+                    enable: true,
+                    duration: 1,
+                    effects: 'fade',
+                    triggerElements: '.trigger-element',
+                    start: 'top 80%',
+                    end: 'bottom 20%',
+                    scrub: false,
+                    markers: false
+                }, true);
+            }
+            
+            startScrollTracking();
+        }
+        
+        function applyGSAPConfig(config, isEnabled) {
+            if (!config || !config.enable || !isEnabled) {
+                destroyGSAP();
+                document.getElementById('debugStatus').textContent = 'Disabled';
+                document.getElementById('debugScrollTrigger').textContent = 'Inactive';
+                return;
+            }
+            
+            if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+                setTimeout(() => applyGSAPConfig(config, isEnabled), 100);
+                return;
+            }
+            
+            destroyGSAP();
+            gsap.registerPlugin(ScrollTrigger);
+            
+            currentConfig = config;
+            gsapInitialized = true;
+            markersVisible = config.markers || false;
+            
+            // Update debug info
+            document.getElementById('debugStatus').textContent = 'Active';
+            document.getElementById('debugScrollTrigger').textContent = 'Running';
+            document.getElementById('debugEffect').textContent = config.effects || 'fade';
+            document.getElementById('markersEnabled').textContent = markersVisible ? 'On' : 'Off';
+            document.getElementById('scrubMode').textContent = config.scrub ? 'On' : 'Off';
+            
+            createScrollAnimations(config);
+            updateTriggersDisplay();
+            
+            console.log('GSAP ScrollTrigger debug initialized:', config);
+        }
+        
+        function createScrollAnimations(config) {
+            const elements = document.querySelectorAll(config.triggerElements || '.trigger-element');
+            
+            elements.forEach((element, index) => {
+                let fromVars = {};
+                let toVars = {
+                    duration: config.duration || 1,
+                    scrollTrigger: {
+                        trigger: element,
+                        start: config.start || 'top 80%',
+                        end: config.end || 'bottom 20%',
+                        scrub: config.scrub || false,
+                        markers: config.markers || false,
+                        id: `trigger-${index}`,
+                        onEnter: () => updateActiveCount(),
+                        onLeave: () => updateActiveCount(),
+                        onEnterBack: () => updateActiveCount(),
+                        onLeaveBack: () => updateActiveCount(),
+                        onUpdate: (self) => updateAnimationProgress(self)
+                    }
+                };
+                
+                switch (config.effects) {
+                    case 'fade':
+                        fromVars = { opacity: 0, y: 30 };
+                        toVars.opacity = 1;
+                        toVars.y = 0;
+                        break;
+                    case 'scale':
+                        fromVars = { opacity: 0, scale: 0.8 };
+                        toVars.opacity = 1;
+                        toVars.scale = 1;
+                        break;
+                    case 'slide':
+                        fromVars = { opacity: 0, x: -50 };
+                        toVars.opacity = 1;
+                        toVars.x = 0;
+                        break;
+                }
+                
+                gsap.fromTo(element, fromVars, toVars);
+            });
+        }
+        
+        function updateActiveCount() {
+            setTimeout(() => {
+                const triggers = ScrollTrigger.getAll();
+                const activeTriggers = triggers.filter(trigger => trigger.isActive);
+                
+                document.getElementById('activeTriggers').textContent = activeTriggers.length;
+                document.getElementById('totalTriggers').textContent = triggers.length;
+                
+                updateTriggersDisplay();
+            }, 10);
+        }
+        
+        function updateAnimationProgress(self) {
+            const progress = Math.round(self.progress * 100);
+            document.getElementById('debugProgress').textContent = progress + '%';
+        }
+        
+        function updateTriggersDisplay() {
+            const triggersList = document.getElementById('triggersList');
+            const triggers = ScrollTrigger.getAll();
+            
+            if (triggers.length === 0) {
+                triggersList.innerHTML = '<div>No ScrollTrigger instances found</div>';
+                return;
+            }
+            
+            let html = '';
+            triggers.forEach((trigger, index) => {
+                const isActive = trigger.isActive;
+                const progress = Math.round(trigger.progress * 100);
+                const className = isActive ? 'trigger-item trigger-active' : 'trigger-item';
+                
+                html += `<div class="${className}">`;
+                html += `<strong>Trigger ${index + 1}</strong> `;
+                html += `(${isActive ? 'Active' : 'Inactive'}) `;
+                html += `Progress: ${progress}%`;
+                html += `</div>`;
+            });
+            
+            triggersList.innerHTML = html;
+        }
+        
+        function startScrollTracking() {
+            window.addEventListener('scroll', () => {
+                const scrollY = window.pageYOffset;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = Math.round((scrollY / docHeight) * 100);
+                
+                document.getElementById('scrollY').textContent = Math.round(scrollY);
+                document.getElementById('scrollPercent').textContent = scrollPercent;
+            });
+        }
+        
+        function refreshScrollTrigger() {
+            if (gsapInitialized && typeof ScrollTrigger !== 'undefined') {
+                ScrollTrigger.refresh();
+                refreshCount++;
+                document.getElementById('refreshCount').textContent = refreshCount;
+                updateTriggersDisplay();
+            }
+        }
+        
+        function toggleMarkers() {
+            if (!gsapInitialized) return;
+            
+            markersVisible = !markersVisible;
+            document.getElementById('markersEnabled').textContent = markersVisible ? 'On' : 'Off';
+            
+            // Recreate triggers with new marker setting
+            if (currentConfig) {
+                currentConfig.markers = markersVisible;
+                applyGSAPConfig(currentConfig, true);
+            }
+        }
+        
+        function killAllTriggers() {
+            if (gsapInitialized && typeof ScrollTrigger !== 'undefined') {
+                ScrollTrigger.killAll();
+                document.getElementById('debugScrollTrigger').textContent = 'Killed';
+                document.getElementById('activeTriggers').textContent = '0';
+                document.getElementById('totalTriggers').textContent = '0';
+                updateTriggersDisplay();
+            }
+        }
+        
+        function destroyGSAP() {
+            if (gsapInitialized && typeof ScrollTrigger !== 'undefined') {
+                ScrollTrigger.killAll();
+                gsapInitialized = false;
+            }
+        }
+        
+        // Initialize when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initGSAPDebug);
+        } else {
+            initGSAPDebug();
+        }
+        
+        window.addEventListener('beforeunload', destroyGSAP);
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Locomotive Scroll - Demo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="libs/locomotive-scroll.min.css">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .parallax-section {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .parallax-bg {
+            position: absolute;
+            top: -20%;
+            left: 0;
+            width: 100%;
+            height: 120%;
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            z-index: -1;
+        }
+        
+        .parallax-content {
+            text-align: center;
+            color: white;
+            z-index: 1;
+        }
+        
+        .in-view-element {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+        
+        .in-view-element.is-inview {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin: 4rem 0;
+        }
+        
+        .feature-card {
+            background: var(--surface);
+            padding: 3rem 2rem;
+            border-radius: 1.5rem;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+        
+        .feature-card.is-inview {
+            transform: translateY(0) scale(1);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .feature-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+        
+        .scroll-speed-demo {
+            background: var(--surface);
+            padding: 5rem 0;
+            position: relative;
+        }
+        
+        .speed-elements {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .speed-element {
+            height: 200px;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        .speed-slow {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+        
+        .speed-normal {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+        }
+        
+        .speed-fast {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+        }
+    </style>
+</head>
+<body data-scroll-container>
+    <nav class="demo-nav">
+        <h3>🧭 Navigation</h3>
+        <ul>
+            <li><a href="#hero" data-scroll-to>Hero</a></li>
+            <li><a href="#features" data-scroll-to>Features</a></li>
+            <li><a href="#parallax" data-scroll-to>Parallax</a></li>
+            <li><a href="#testimonials" data-scroll-to>Testimonials</a></li>
+            <li><a href="#contact" data-scroll-to>Contact</a></li>
+        </ul>
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+            <a href="locomotive-debug.html" class="btn btn-debug" style="width: 100%; text-align: center;">Debug View</a>
+        </div>
+    </nav>
+
+    <a href="index.html" class="back-to-config">⚙️ Back to Config</a>
+
+    <section id="hero" class="hero-section" data-scroll-section>
+        <div class="hero-content" data-scroll data-scroll-speed="0.5">
+            <h1>Locomotive Scroll</h1>
+            <p>Experience smooth scrolling with parallax effects, in-view detection, and advanced scroll-based interactions powered by Locomotive Scroll.</p>
+            <a href="#features" class="cta-button" data-scroll-to>Explore Features</a>
+        </div>
+    </section>
+
+    <section id="features" class="demo-section" data-scroll-section>
+        <div class="demo-container">
+            <h2 class="in-view-element" data-scroll data-scroll-class="is-inview">🚀 Locomotive Features</h2>
+            <p class="in-view-element" data-scroll data-scroll-class="is-inview" data-scroll-delay="0.1">Locomotive Scroll provides powerful tools for creating immersive scroll experiences.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card in-view-element" data-scroll data-scroll-class="is-inview" data-scroll-delay="0.1">
+                    <span class="feature-icon">🎢</span>
+                    <h3>Smooth Scrolling</h3>
+                    <p>Buttery-smooth scrolling with customizable lerp values and easing functions for natural movement.</p>
+                </div>
+                
+                <div class="feature-card in-view-element" data-scroll data-scroll-class="is-inview" data-scroll-delay="0.2">
+                    <span class="feature-icon">🌊</span>
+                    <h3>Parallax Effects</h3>
+                    <p>Create stunning parallax effects with different scroll speeds for background and foreground elements.</p>
+                </div>
+                
+                <div class="feature-card in-view-element" data-scroll data-scroll-class="is-inview" data-scroll-delay="0.3">
+                    <span class="feature-icon">👁️</span>
+                    <h3>In-View Detection</h3>
+                    <p>Automatically detect when elements enter the viewport and trigger animations or state changes.</p>
+                </div>
+                
+                <div class="feature-card in-view-element" data-scroll data-scroll-class="is-inview" data-scroll-delay="0.4">
+                    <span class="feature-icon">📱</span>
+                    <h3>Device Support</h3>
+                    <p>Configurable behavior for tablets and smartphones with touch-optimized scrolling.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="parallax" class="parallax-section" data-scroll-section>
+        <div class="parallax-bg" data-scroll data-scroll-speed="-0.5"></div>
+        <div class="parallax-content" data-scroll data-scroll-speed="0.3">
+            <h2>Parallax in Action</h2>
+            <p>Notice how the background and content move at different speeds</p>
+        </div>
+    </section>
+
+    <section class="scroll-speed-demo" data-scroll-section>
+        <div class="demo-container">
+            <h2 class="in-view-element" data-scroll data-scroll-class="is-inview">🏃‍♂️ Scroll Speed Demo</h2>
+            <p class="in-view-element" data-scroll data-scroll-class="is-inview">Different elements can scroll at different speeds to create depth and visual interest.</p>
+            
+            <div class="speed-elements">
+                <div class="speed-element speed-slow" data-scroll data-scroll-speed="-0.3">
+                    Slow (-0.3)
+                </div>
+                <div class="speed-element speed-normal" data-scroll data-scroll-speed="0">
+                    Normal (0)
+                </div>
+                <div class="speed-element speed-fast" data-scroll data-scroll-speed="0.3">
+                    Fast (0.3)
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="demo-section" data-scroll-section>
+        <div class="demo-container">
+            <h2 class="in-view-element" data-scroll data-scroll-class="is-inview">💬 What Developers Say</h2>
+            <p class="in-view-element" data-scroll data-scroll-class="is-inview">Here's what web developers think about Locomotive Scroll:</p>
+            
+            <div style="display: grid; gap: 2rem; margin: 3rem 0;">
+                <div class="in-view-element" data-scroll data-scroll-class="is-inview" data-scroll-delay="0.1" style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                    <p style="font-style: italic; margin-bottom: 1rem;">"Locomotive Scroll makes creating parallax effects incredibly easy. The in-view detection is perfect for triggering animations."</p>
+                    <div style="font-weight: 600; color: var(--primary-color);">— David Kim, Creative Developer</div>
+                </div>
+                
+                <div class="in-view-element" data-scroll data-scroll-class="is-inview" data-scroll-delay="0.2" style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                    <p style="font-style: italic; margin-bottom: 1rem;">"The smooth scrolling feels natural and the performance is excellent. Great for creating immersive web experiences."</p>
+                    <div style="font-weight: 600; color: var(--primary-color);">— Sophie Martinez, UX Engineer</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="demo-section" data-scroll-section>
+        <div class="demo-container">
+            <h2 class="in-view-element" data-scroll data-scroll-class="is-inview">🚀 Get Started with Locomotive</h2>
+            <p class="in-view-element" data-scroll data-scroll-class="is-inview">Ready to create immersive scroll experiences? Here's everything you need to get started.</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0;">
+                <div class="in-view-element" data-scroll data-scroll-class="is-inview" data-scroll-delay="0.1" style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                    <h3>🚀 Quick Start</h3>
+                    <pre style="background: var(--background); padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.8rem;"><code>// Load Locomotive Scroll
+&lt;link rel="stylesheet" href="libs/locomotive-scroll.min.css"&gt;
+&lt;script src="libs/locomotive-scroll.min.js"&gt;&lt;/script&gt;</code></pre>
+                </div>
+                
+                <div class="in-view-element" data-scroll data-scroll-class="is-inview" data-scroll-delay="0.2" style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                    <h3>⚙️ Basic Setup</h3>
+                    <pre style="background: var(--background); padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.8rem;"><code>const scroll = new LocomotiveScroll({
+  el: document.querySelector('[data-scroll-container]'),
+  smooth: true,
+  lerp: 0.1,
+  direction: 'vertical'
+});
+
+// Add data attributes to HTML elements
+// data-scroll
+// data-scroll-speed="0.5"
+// data-scroll-class="is-inview"</code></pre>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;" class="in-view-element" data-scroll data-scroll-class="is-inview">
+                <a href="https://github.com/locomotivemtl/locomotive-scroll" target="_blank" class="btn btn-primary" style="margin-right: 1rem;">View Documentation</a>
+                <a href="locomotive-debug.html" class="btn btn-debug">Debug This Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="demo-section" style="background: var(--surface); border-top: 1px solid var(--border);" data-scroll-section>
+        <div class="demo-container text-center">
+            <h3 class="in-view-element" data-scroll data-scroll-class="is-inview">Locomotive Scroll Demo</h3>
+            <p class="in-view-element" data-scroll data-scroll-class="is-inview">Immersive scroll experiences with parallax and in-view detection.</p>
+            <p class="in-view-element" data-scroll data-scroll-class="is-inview">
+                <a href="index.html">← Back to Configuration</a> |
+                <a href="locomotive-debug.html">Debug View →</a>
+            </p>
+            <p style="margin-top: 2rem; color: var(--text-muted); font-size: 0.875rem;" class="in-view-element" data-scroll data-scroll-class="is-inview">
+                Scroll to top: <a href="#hero" data-scroll-to>🔝</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="libs/locomotive-scroll.min.js"></script>
+    <script>
+        let locomotiveInstance = null;
+        let currentConfig = null;
+        
+        function initLocomotiveDemo() {
+            try {
+                const stored = sessionStorage.getItem('smoothScrollConfig');
+                if (stored) {
+                    const config = JSON.parse(stored);
+                    if (config.currentLibrary === 'locomotive' && config.config && config.config.locomotive) {
+                        applyLocomotiveConfig(config.config.locomotive, config.isEnabled);
+                    }
+                }
+            } catch (error) {
+                console.warn('Error loading config:', error);
+                applyLocomotiveConfig({
+                    enable: true,
+                    smooth: true,
+                    direction: 'vertical',
+                    lerp: 0.1,
+                    class: '.is-inview',
+                    repeat: false,
+                    tablet: false,
+                    smartphone: false
+                }, true);
+            }
+        }
+        
+        function applyLocomotiveConfig(config, isEnabled) {
+            if (!config || !config.enable || !isEnabled) {
+                destroyLocomotive();
+                return;
+            }
+            
+            if (typeof LocomotiveScroll === 'undefined') {
+                setTimeout(() => applyLocomotiveConfig(config, isEnabled), 100);
+                return;
+            }
+            
+            destroyLocomotive();
+            
+            const container = document.querySelector('[data-scroll-container]');
+            if (!container) {
+                console.error('Locomotive Scroll container not found');
+                return;
+            }
+            
+            const locomotiveConfig = {
+                el: container,
+                smooth: config.smooth !== false,
+                direction: config.direction || 'vertical',
+                lerp: config.lerp || 0.1,
+                class: config.class || 'is-inview',
+                repeat: config.repeat || false,
+                tablet: { smooth: config.tablet || false },
+                smartphone: { smooth: config.smartphone || false },
+                reloadOnContextChange: config.reload || false,
+                multiplier: config.touchMult || 1.5,
+                firefoxMultiplier: config.firefoxMult || 1
+            };
+            
+            locomotiveInstance = new LocomotiveScroll(locomotiveConfig);
+            currentConfig = config;
+            
+            // Handle anchor links
+            document.querySelectorAll('a[data-scroll-to]').forEach(anchor => {
+                anchor.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = anchor.getAttribute('href') || anchor.getAttribute('data-scroll-to');
+                    if (target && locomotiveInstance) {
+                        locomotiveInstance.scrollTo(target);
+                    }
+                });
+            });
+            
+            console.log('Locomotive Scroll initialized with config:', config);
+        }
+        
+        function destroyLocomotive() {
+            if (locomotiveInstance) {
+                locomotiveInstance.destroy();
+                locomotiveInstance = null;
+            }
+        }
+        
+        // Initialize when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initLocomotiveDemo);
+        } else {
+            initLocomotiveDemo();
+        }
+        
+        window.addEventListener('beforeunload', destroyLocomotive);
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Locomotive Scroll - Debug</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="libs/locomotive-scroll.min.css">
+    <style>
+        .test-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; border: 2px dashed var(--border); margin: 2rem 0; border-radius: 1rem; position: relative; }
+        .test-section::before { content: attr(data-section); position: absolute; top: 1rem; left: 1rem; background: var(--primary-color); color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; }
+        .test-section:nth-child(even) { background: var(--surface); }
+        .in-view-list { max-height: 200px; overflow-y: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 0.5rem; padding: 1rem; margin: 1rem 0; }
+        .in-view-item { padding: 0.5rem; margin: 0.25rem 0; background: var(--background); border-radius: 0.25rem; font-size: 0.8rem; }
+        .in-view-active { background: var(--success-color); color: white; }
+        .debug-element { opacity: 0.3; transition: opacity 0.5s ease; }
+        .debug-element.is-inview { opacity: 1; }
+    </style>
+</head>
+<body data-scroll-container>
+    <div class="debug-overlay" id="debugOverlay">
+        <div><strong>Locomotive Debug</strong></div>
+        <div>Scroll: <span id="scrollY">0</span>px</div>
+        <div>Progress: <span id="scrollPercent">0</span>%</div>
+        <div>Direction: <span id="direction">vertical</span></div>
+        <div>Lerp: <span id="lerpValue">0.1</span></div>
+        <div>In View: <span id="inViewCount">0</span></div>
+        <div>Speed: <span id="scrollSpeed">0</span></div>
+        <div>Instance: <span id="instanceStatus">loading</span></div>
+    </div>
+
+    <div class="debug-container">
+        <div class="debug-content">
+            <h1 class="debug-element" data-scroll data-scroll-class="is-inview">🐛 Locomotive Scroll Debug</h1>
+            <p class="debug-element" data-scroll data-scroll-class="is-inview" data-scroll-delay="0.1">Real-time debugging and monitoring for Locomotive Scroll with in-view detection.</p>
+            
+            <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border); margin: 2rem 0;">
+                <h3>👁️ In-View Elements</h3>
+                <div class="in-view-list" id="inViewList">
+                    <div>Loading in-view detection...</div>
+                </div>
+            </div>
+            
+            <div class="test-section debug-element" data-scroll data-scroll-class="is-inview" data-scroll-speed="0.2" data-section="Parallax Test" id="section1" data-scroll-section>
+                <div>
+                    <h2>Parallax Speed Test</h2>
+                    <p>This section has a scroll speed of 0.2 for parallax effect.</p>
+                    <a href="#section2" class="btn btn-primary" data-scroll-to>Next Section</a>
+                </div>
+            </div>
+            
+            <div class="test-section debug-element" data-scroll data-scroll-class="is-inview" data-scroll-speed="-0.1" data-section="Reverse Parallax" id="section2" data-scroll-section>
+                <div>
+                    <h2>Reverse Parallax Test</h2>
+                    <p>This section has a negative scroll speed of -0.1.</p>
+                    <a href="#section3" class="btn btn-primary" data-scroll-to>Next Section</a>
+                </div>
+            </div>
+            
+            <div class="test-section debug-element" data-scroll data-scroll-class="is-inview" data-section="In-View Test" id="section3" data-scroll-section>
+                <div>
+                    <h2>In-View Detection Test</h2>
+                    <p>Watch the debug panel to see when this element enters/exits view.</p>
+                    <a href="#section4" class="btn btn-primary" data-scroll-to>Next Section</a>
+                </div>
+            </div>
+            
+            <div class="test-section debug-element" data-scroll data-scroll-class="is-inview" data-scroll-delay="0.3" data-section="Delayed Animation" id="section4" data-scroll-section>
+                <div>
+                    <h2>Delayed Animation Test</h2>
+                    <p>This section has a 0.3s delay before the in-view class is applied.</p>
+                    <a href="#section1" class="btn btn-primary" data-scroll-to>Back to Start</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="debug-panel">
+            <h3>🔍 Real-time Debug</h3>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Locomotive Status:</span>
+                <span class="debug-metric-value" id="debugStatus">Loading</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Scroll Position:</span>
+                <span class="debug-metric-value" id="debugScrollPos">0px</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Scroll Direction:</span>
+                <span class="debug-metric-value" id="debugDirection">vertical</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Lerp Value:</span>
+                <span class="debug-metric-value" id="debugLerp">0.1</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Elements in View:</span>
+                <span class="debug-metric-value" id="debugInView">0</span>
+            </div>
+            
+            <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+            
+            <h4>Quick Actions</h4>
+            <button onclick="scrollToTop()" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">Scroll to Top</button>
+            <button onclick="scrollToBottom()" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">Scroll to Bottom</button>
+            <button onclick="updateLocomotive()" class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;">Update Instance</button>
+            
+            <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+            
+            <div style="text-align: center;">
+                <a href="index.html" class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;">← Config</a>
+                <a href="locomotive.html" class="btn btn-demo" style="width: 100%;">Demo →</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="libs/locomotive-scroll.min.js"></script>
+    <script>
+        let locomotiveInstance = null;
+        let currentConfig = null;
+        let inViewElements = new Set();
+        let lastScrollY = 0;
+        
+        function initLocomotiveDebug() {
+            try {
+                const stored = sessionStorage.getItem('smoothScrollConfig');
+                if (stored) {
+                    const config = JSON.parse(stored);
+                    if (config.currentLibrary === 'locomotive' && config.config && config.config.locomotive) {
+                        applyLocomotiveConfig(config.config.locomotive, config.isEnabled);
+                    }
+                }
+            } catch (error) {
+                console.warn('Error loading config:', error);
+                applyLocomotiveConfig({
+                    enable: true,
+                    smooth: true,
+                    direction: 'vertical',
+                    lerp: 0.1,
+                    class: 'is-inview',
+                    repeat: false,
+                    tablet: false,
+                    smartphone: false
+                }, true);
+            }
+        }
+        
+        function applyLocomotiveConfig(config, isEnabled) {
+            if (!config || !config.enable || !isEnabled) {
+                destroyLocomotive();
+                document.getElementById('debugStatus').textContent = 'Disabled';
+                document.getElementById('instanceStatus').textContent = 'disabled';
+                return;
+            }
+            
+            if (typeof LocomotiveScroll === 'undefined') {
+                setTimeout(() => applyLocomotiveConfig(config, isEnabled), 100);
+                return;
+            }
+            
+            destroyLocomotive();
+            
+            const container = document.querySelector('[data-scroll-container]');
+            if (!container) {
+                console.error('Locomotive Scroll container not found');
+                return;
+            }
+            
+            const locomotiveConfig = {
+                el: container,
+                smooth: config.smooth !== false,
+                direction: config.direction || 'vertical',
+                lerp: config.lerp || 0.1,
+                class: config.class || 'is-inview',
+                repeat: config.repeat || false,
+                tablet: { smooth: config.tablet || false },
+                smartphone: { smooth: config.smartphone || false }
+            };
+            
+            locomotiveInstance = new LocomotiveScroll(locomotiveConfig);
+            currentConfig = config;
+            
+            // Update debug info
+            document.getElementById('debugStatus').textContent = 'Active';
+            document.getElementById('debugDirection').textContent = config.direction || 'vertical';
+            document.getElementById('debugLerp').textContent = config.lerp || '0.1';
+            document.getElementById('direction').textContent = config.direction || 'vertical';
+            document.getElementById('lerpValue').textContent = config.lerp || '0.1';
+            document.getElementById('instanceStatus').textContent = 'active';
+            
+            // Set up event listeners
+            locomotiveInstance.on('scroll', (instance) => {
+                updateScrollInfo(instance);
+            });
+            
+            locomotiveInstance.on('call', (value, way, obj) => {
+                updateInViewElements(obj.el, way === 'enter');
+            });
+            
+            // Handle anchor links
+            document.querySelectorAll('a[data-scroll-to]').forEach(anchor => {
+                anchor.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = anchor.getAttribute('href') || anchor.getAttribute('data-scroll-to');
+                    if (target && locomotiveInstance) {
+                        locomotiveInstance.scrollTo(target);
+                    }
+                });
+            });
+            
+            console.log('Locomotive Scroll debug initialized:', config);
+        }
+        
+        function updateScrollInfo(instance) {
+            const scroll = instance.scroll;
+            const limit = instance.limit;
+            const direction = scroll.y > lastScrollY ? 'down' : scroll.y < lastScrollY ? 'up' : 'none';
+            const progress = Math.round((scroll.y / limit.y) * 100);
+            const speed = Math.abs(scroll.y - lastScrollY);
+            
+            // Update overlay
+            document.getElementById('scrollY').textContent = Math.round(scroll.y);
+            document.getElementById('scrollPercent').textContent = progress;
+            document.getElementById('scrollSpeed').textContent = Math.round(speed);
+            
+            // Update debug panel
+            document.getElementById('debugScrollPos').textContent = Math.round(scroll.y) + 'px';
+            
+            lastScrollY = scroll.y;
+        }
+        
+        function updateInViewElements(element, isEntering) {
+            const elementId = element.id || element.className || 'unnamed';
+            
+            if (isEntering) {
+                inViewElements.add(elementId);
+            } else {
+                inViewElements.delete(elementId);
+            }
+            
+            // Update counts
+            document.getElementById('inViewCount').textContent = inViewElements.size;
+            document.getElementById('debugInView').textContent = inViewElements.size;
+            
+            // Update in-view list
+            updateInViewList();
+        }
+        
+        function updateInViewList() {
+            const inViewList = document.getElementById('inViewList');
+            
+            if (inViewElements.size === 0) {
+                inViewList.innerHTML = '<div>No elements currently in view</div>';
+                return;
+            }
+            
+            let html = '';
+            inViewElements.forEach(elementId => {
+                html += `<div class="in-view-item in-view-active">${elementId}</div>`;
+            });
+            
+            inViewList.innerHTML = html;
+        }
+        
+        function scrollToTop() {
+            if (locomotiveInstance) {
+                locomotiveInstance.scrollTo(0);
+            }
+        }
+        
+        function scrollToBottom() {
+            if (locomotiveInstance) {
+                locomotiveInstance.scrollTo('bottom');
+            }
+        }
+        
+        function updateLocomotive() {
+            if (locomotiveInstance) {
+                locomotiveInstance.update();
+                console.log('Locomotive Scroll instance updated');
+            }
+        }
+        
+        function destroyLocomotive() {
+            if (locomotiveInstance) {
+                locomotiveInstance.destroy();
+                locomotiveInstance = null;
+                inViewElements.clear();
+            }
+        }
+        
+        // Initialize when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initLocomotiveDebug);
+        } else {
+            initLocomotiveDebug();
+        }
+        
+        window.addEventListener('beforeunload', destroyLocomotive);
+    </script>
+</body>
+</html>
+

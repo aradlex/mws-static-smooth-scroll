@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smooth Scrollbar - Demo</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            height: auto;
+            overflow: hidden;
+        }
+        
+        .scrollbar-container {
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero-content h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .feature-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin: 4rem 0;
+        }
+        
+        .feature-card {
+            background: var(--surface);
+            padding: 3rem 2rem;
+            border-radius: 1.5rem;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .feature-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+        
+        .scrollbar-demo {
+            background: var(--surface);
+            padding: 5rem 0;
+            position: relative;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .demo-box {
+            height: 300px;
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        
+        .custom-scrollbar {
+            /* Custom scrollbar styles will be applied via JavaScript */
+        }
+        
+        /* Demo nav positioning for scrollbar */
+        .demo-nav {
+            position: fixed;
+            top: var(--spacing-md);
+            right: var(--spacing-md);
+            z-index: 1001;
+        }
+        
+        .back-to-config {
+            z-index: 1001;
+        }
+    </style>
+</head>
+<body>
+    <div class="scrollbar-container" id="scrollbarContainer">
+        <nav class="demo-nav">
+            <h3>🧭 Navigation</h3>
+            <ul>
+                <li><a href="#hero">Hero</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                <a href="smooth-scrollbar-debug.html" class="btn btn-debug" style="width: 100%; text-align: center;">Debug View</a>
+            </div>
+        </nav>
+
+        <a href="index.html" class="back-to-config">⚙️ Back to Config</a>
+
+        <section id="hero" class="hero-section">
+            <div class="hero-content">
+                <h1>Smooth Scrollbar</h1>
+                <p>Experience customizable smooth scrolling with beautiful scrollbars, overscroll effects, and touch support powered by Smooth Scrollbar.</p>
+                <a href="#features" class="cta-button">Explore Features</a>
+            </div>
+        </section>
+
+        <section id="features" class="demo-section">
+            <div class="demo-container">
+                <h2>🎨 Smooth Scrollbar Features</h2>
+                <p>Smooth Scrollbar provides complete control over scrolling behavior with customizable visual elements.</p>
+                
+                <div class="feature-showcase">
+                    <div class="feature-card">
+                        <span class="feature-icon">🎨</span>
+                        <h3>Custom Scrollbars</h3>
+                        <p>Fully customizable scrollbar appearance with custom colors, sizes, and styling options.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <span class="feature-icon">🌊</span>
+                        <h3>Smooth Scrolling</h3>
+                        <p>Buttery-smooth scrolling with configurable damping and momentum for natural feel.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <span class="feature-icon">📱</span>
+                        <h3>Touch Support</h3>
+                        <p>Native touch and gesture support for mobile devices with momentum scrolling.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <span class="feature-icon">🔧</span>
+                        <h3>Highly Configurable</h3>
+                        <p>Extensive options for damping, thumb size, track visibility, and overscroll effects.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="demo" class="scrollbar-demo">
+            <div class="demo-container">
+                <h2>🚀 Scrollbar in Action</h2>
+                <p>Notice the custom scrollbar on the right side of the screen. It's fully interactive and customizable.</p>
+                
+                <div class="demo-grid">
+                    <div class="demo-box">Custom Scrollbar Demo</div>
+                    <div class="demo-box">Smooth Momentum</div>
+                    <div class="demo-box">Touch Gestures</div>
+                    <div class="demo-box">Overscroll Effects</div>
+                    <div class="demo-box">Configurable Damping</div>
+                    <div class="demo-box">Custom Styling</div>
+                </div>
+                
+                <div style="background: var(--background); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border); margin: 3rem 0;">
+                    <h3>📊 Scrollbar Properties</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                        <div>
+                            <strong>Damping:</strong> <span id="dampingValue">0.1</span>
+                        </div>
+                        <div>
+                            <strong>Thumb Size:</strong> <span id="thumbSizeValue">20px</span>
+                        </div>
+                        <div>
+                            <strong>Render Mode:</strong> <span id="renderModeValue">CSS</span>
+                        </div>
+                        <div>
+                            <strong>Always Show:</strong> <span id="alwaysShowValue">No</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials" class="demo-section">
+            <div class="demo-container">
+                <h2>💬 What Developers Say</h2>
+                <p>Here's what web developers think about Smooth Scrollbar:</p>
+                
+                <div style="display: grid; gap: 2rem; margin: 3rem 0;">
+                    <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                        <p style="font-style: italic; margin-bottom: 1rem;">"Smooth Scrollbar gives me complete control over the scrolling experience. The customization options are incredible."</p>
+                        <div style="font-weight: 600; color: var(--primary-color);">— Rachel Green, UI Designer</div>
+                    </div>
+                    
+                    <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                        <p style="font-style: italic; margin-bottom: 1rem;">"The touch support is excellent and the momentum scrolling feels natural on all devices. Great for custom interfaces."</p>
+                        <div style="font-weight: 600; color: var(--primary-color);">— Mike Johnson, Frontend Developer</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="demo-section">
+            <div class="demo-container">
+                <h2>🚀 Get Started with Smooth Scrollbar</h2>
+                <p>Ready to implement custom scrollbars? Here's everything you need to get started.</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0;">
+                    <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                        <h3>🚀 Quick Start</h3>
+                        <pre style="background: var(--background); padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.8rem;"><code>// Load Smooth Scrollbar
+&lt;script src="libs/smooth-scrollbar.min.js"&gt;&lt;/script&gt;</code></pre>
+                    </div>
+                    
+                    <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                        <h3>⚙️ Basic Setup</h3>
+                        <pre style="background: var(--background); padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.8rem;"><code>const scrollbar = Scrollbar.init(document.body, {
+  damping: 0.1,
+  thumbMinSize: 20,
+  renderByPixels: true,
+  alwaysShowTracks: false,
+  continuousScrolling: true
+});
+
+// Custom styling
+scrollbar.track.xAxis.element.style.background = '#f0f0f0';
+scrollbar.track.yAxis.element.style.background = '#f0f0f0';</code></pre>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 3rem;">
+                    <a href="https://github.com/idiotWu/smooth-scrollbar" target="_blank" class="btn btn-primary" style="margin-right: 1rem;">View Documentation</a>
+                    <a href="smooth-scrollbar-debug.html" class="btn btn-debug">Debug This Demo</a>
+                </div>
+            </div>
+        </section>
+
+        <footer class="demo-section" style="background: var(--surface); border-top: 1px solid var(--border);">
+            <div class="demo-container text-center">
+                <h3>Smooth Scrollbar Demo</h3>
+                <p>Custom scrollbars with smooth scrolling and touch support.</p>
+                <p>
+                    <a href="index.html">← Back to Configuration</a> |
+                    <a href="smooth-scrollbar-debug.html">Debug View →</a>
+                </p>
+                <p style="margin-top: 2rem; color: var(--text-muted); font-size: 0.875rem;">
+                    Scroll to top: <a href="#hero">🔝</a>
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="libs/smooth-scrollbar.min.js"></script>
+    <script>
+        let scrollbarInstance = null;
+        let currentConfig = null;
+        
+        function initScrollbarDemo() {
+            try {
+                const stored = sessionStorage.getItem('smoothScrollConfig');
+                if (stored) {
+                    const config = JSON.parse(stored);
+                    if (config.currentLibrary === 'smooth-scrollbar' && config.config && config.config['smooth-scrollbar']) {
+                        applyScrollbarConfig(config.config['smooth-scrollbar'], config.isEnabled);
+                    }
+                }
+            } catch (error) {
+                console.warn('Error loading config:', error);
+                applyScrollbarConfig({
+                    enable: true,
+                    damping: 0.1,
+                    thumbMinSize: 20,
+                    renderByPixels: false,
+                    alwaysShowTracks: false,
+                    continuousScrolling: false,
+                    wheelEventTarget: 'container',
+                    overscrollEffect: false,
+                    textSelection: true,
+                    customColors: false,
+                    disableTouch: false
+                }, true);
+            }
+        }
+        
+        function applyScrollbarConfig(config, isEnabled) {
+            if (!config || !config.enable || !isEnabled) {
+                destroyScrollbar();
+                return;
+            }
+            
+            if (config.disableTouch && 'ontouchstart' in window) {
+                destroyScrollbar();
+                return;
+            }
+            
+            if (typeof Scrollbar === 'undefined') {
+                setTimeout(() => applyScrollbarConfig(config, isEnabled), 100);
+                return;
+            }
+            
+            destroyScrollbar();
+            
+            const container = document.getElementById('scrollbarContainer');
+            if (!container) {
+                console.error('Scrollbar container not found');
+                return;
+            }
+            
+            const scrollbarConfig = {
+                damping: config.damping || 0.1,
+                thumbMinSize: config.thumbMinSize || 20,
+                renderByPixels: config.renderByPixels || false,
+                alwaysShowTracks: config.alwaysShowTracks || false,
+                continuousScrolling: config.continuousScrolling || false,
+                wheelEventTarget: config.wheelEventTarget === 'document' ? document : null
+            };
+            
+            scrollbarInstance = Scrollbar.init(container, scrollbarConfig);
+            currentConfig = config;
+            
+            // Apply custom styling if enabled
+            if (config.customColors && scrollbarInstance) {
+                const tracks = scrollbarInstance.track;
+                if (tracks.xAxis) {
+                    tracks.xAxis.element.style.background = 'rgba(0,0,0,0.1)';
+                }
+                if (tracks.yAxis) {
+                    tracks.yAxis.element.style.background = 'rgba(0,0,0,0.1)';
+                }
+            }
+            
+            // Handle text selection
+            if (!config.textSelection) {
+                document.body.style.userSelect = 'none';
+            } else {
+                document.body.style.userSelect = '';
+            }
+            
+            // Update display values
+            updateConfigDisplay(config);
+            
+            // Handle anchor links
+            setupAnchorLinks();
+            
+            console.log('Smooth Scrollbar initialized with config:', config);
+        }
+        
+        function updateConfigDisplay(config) {
+            document.getElementById('dampingValue').textContent = config.damping || '0.1';
+            document.getElementById('thumbSizeValue').textContent = (config.thumbMinSize || 20) + 'px';
+            document.getElementById('renderModeValue').textContent = config.renderByPixels ? 'Pixels' : 'CSS';
+            document.getElementById('alwaysShowValue').textContent = config.alwaysShowTracks ? 'Yes' : 'No';
+        }
+        
+        function setupAnchorLinks() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = anchor.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement && scrollbarInstance) {
+                        scrollbarInstance.scrollIntoView(targetElement, {
+                            alignToTop: true,
+                            offsetTop: 0
+                        });
+                    }
+                });
+            });
+        }
+        
+        function destroyScrollbar() {
+            if (scrollbarInstance) {
+                scrollbarInstance.destroy();
+                scrollbarInstance = null;
+            }
+            
+            // Reset body styles
+            document.body.style.userSelect = '';
+            document.body.style.overflow = '';
+        }
+        
+        // Initialize when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initScrollbarDemo);
+        } else {
+            initScrollbarDemo();
+        }
+        
+        window.addEventListener('beforeunload', destroyScrollbar);
+    </script>
+</body>
+</html>
+

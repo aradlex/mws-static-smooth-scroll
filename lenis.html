@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lenis - Demo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="libs/lenis.css">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+        }
+        
+        .hero-content p {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease-out 0.8s forwards;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 1.2rem 2.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1.1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s ease-out 1.1s forwards;
+        }
+        
+        .cta-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-3px);
+        }
+        
+        .feature-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin: 4rem 0;
+        }
+        
+        .feature-card {
+            background: var(--surface);
+            padding: 3rem 2rem;
+            border-radius: 1.5rem;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-color);
+        }
+        
+        .feature-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+        
+        .performance-section {
+            background: var(--surface);
+            padding: 5rem 0;
+            position: relative;
+        }
+        
+        .performance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .performance-metric {
+            text-align: center;
+            padding: 2rem;
+            background: var(--background);
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+        }
+        
+        .metric-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+        }
+        
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="demo-nav">
+        <h3>🧭 Navigation</h3>
+        <ul>
+            <li><a href="#hero">Hero</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#performance">Performance</a></li>
+            <li><a href="#testimonials">Testimonials</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+            <a href="lenis-debug.html" class="btn btn-debug" style="width: 100%; text-align: center;">Debug View</a>
+        </div>
+    </nav>
+
+    <a href="index.html" class="back-to-config">⚙️ Back to Config</a>
+
+    <section id="hero" class="hero-section">
+        <div class="hero-content">
+            <h1>Lenis Smooth Scroll</h1>
+            <p>Experience buttery-smooth scrolling with Lenis - a lightweight, robust, and performant smooth scroll library that delivers exceptional user experiences across all devices.</p>
+            <a href="#features" class="cta-button">Discover the Magic</a>
+        </div>
+    </section>
+
+    <section id="features" class="demo-section">
+        <div class="demo-container">
+            <h2>🚀 Why Choose Lenis?</h2>
+            <p>Lenis stands out as the premier choice for smooth scrolling with its advanced features and exceptional performance.</p>
+            
+            <div class="feature-showcase">
+                <div class="feature-card">
+                    <span class="feature-icon">⚡</span>
+                    <h3>Lightning Fast</h3>
+                    <p>Optimized for 60fps performance with minimal CPU usage. Uses requestAnimationFrame for smooth animations that don't block the main thread.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🎯</span>
+                    <h3>Precise Control</h3>
+                    <p>Fine-tune every aspect of scrolling behavior with lerp values, easing functions, and custom duration settings for pixel-perfect control.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">📱</span>
+                    <h3>Mobile Optimized</h3>
+                    <p>Seamless touch support with configurable multipliers and sync options. Works beautifully on all devices and screen sizes.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🔧</span>
+                    <h3>Highly Configurable</h3>
+                    <p>Extensive API with options for direction, wrapper elements, infinite scroll, and custom easing functions to match your design needs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="performance" class="performance-section">
+        <div class="demo-container">
+            <h2>📊 Performance Metrics</h2>
+            <p>Lenis delivers exceptional performance across all metrics that matter for smooth scrolling experiences.</p>
+            
+            <div class="performance-grid">
+                <div class="performance-metric">
+                    <span class="metric-value" id="fpsCounter">60</span>
+                    <div class="metric-label">Frames Per Second</div>
+                </div>
+                
+                <div class="performance-metric">
+                    <span class="metric-value" id="scrollVelocity">0</span>
+                    <div class="metric-label">Scroll Velocity (px/s)</div>
+                </div>
+                
+                <div class="performance-metric">
+                    <span class="metric-value" id="lerpValue">0.1</span>
+                    <div class="metric-label">Current Lerp Value</div>
+                </div>
+                
+                <div class="performance-metric">
+                    <span class="metric-value" id="scrollProgress">0%</span>
+                    <div class="metric-label">Scroll Progress</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="demo-section">
+        <div class="demo-container">
+            <h2>💬 What Developers Say</h2>
+            <p>Here's what web developers think about Lenis smooth scrolling:</p>
+            
+            <div style="display: grid; gap: 2rem; margin: 3rem 0;">
+                <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                    <p style="font-style: italic; margin-bottom: 1rem;">"Lenis is incredibly smooth and performant. The lerp-based interpolation creates the most natural scrolling experience I've ever implemented."</p>
+                    <div style="font-weight: 600; color: var(--primary-color);">— Alex Thompson, Creative Developer</div>
+                </div>
+                
+                <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                    <p style="font-style: italic; margin-bottom: 1rem;">"The configuration options are perfect. I can fine-tune the scrolling behavior to match any design requirement while maintaining excellent performance."</p>
+                    <div style="font-weight: 600; color: var(--primary-color);">— Maria Garcia, Frontend Architect</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="demo-section">
+        <div class="demo-container">
+            <h2>🚀 Get Started with Lenis</h2>
+            <p>Ready to implement Lenis in your project? Here's everything you need to get started.</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0;">
+                <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                    <h3>🚀 Quick Start</h3>
+                    <pre style="background: var(--background); padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.8rem;"><code>// Install via npm
+npm install @studio-freight/lenis
+
+// Or use local files
+&lt;link rel="stylesheet" href="libs/lenis.css"&gt;
+&lt;script src="libs/lenis.min.js"&gt;&lt;/script&gt;</code></pre>
+                </div>
+                
+                <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                    <h3>⚙️ Basic Setup</h3>
+                    <pre style="background: var(--background); padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.8rem;"><code>const lenis = new Lenis({
+  duration: 1.2,
+  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+  direction: 'vertical',
+  smooth: true
+});
+
+function raf(time) {
+  lenis.raf(time);
+  requestAnimationFrame(raf);
+}
+requestAnimationFrame(raf);</code></pre>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="https://github.com/studio-freight/lenis" target="_blank" class="btn btn-primary" style="margin-right: 1rem;">View Documentation</a>
+                <a href="lenis-debug.html" class="btn btn-debug">Debug This Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="demo-section" style="background: var(--surface); border-top: 1px solid var(--border);">
+        <div class="demo-container text-center">
+            <h3>Lenis Smooth Scroll Demo</h3>
+            <p>Experience the power of professional-grade smooth scrolling with Lenis.</p>
+            <p>
+                <a href="index.html">← Back to Configuration</a> |
+                <a href="lenis-debug.html">Debug View →</a>
+            </p>
+            <p style="margin-top: 2rem; color: var(--text-muted); font-size: 0.875rem;">
+                Scroll to top: <a href="#hero">🔝</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="libs/lenis.min.js"></script>
+    <script>
+        let lenisInstance = null;
+        let currentConfig = null;
+        
+        function initLenisDemo() {
+            // Load configuration from sessionStorage
+            try {
+                const stored = sessionStorage.getItem('smoothScrollConfig');
+                if (stored) {
+                    const config = JSON.parse(stored);
+                    if (config.currentLibrary === 'lenis' && config.config && config.config.lenis) {
+                        applyLenisConfig(config.config.lenis, config.isEnabled);
+                    }
+                }
+            } catch (error) {
+                console.warn('Error loading config:', error);
+                // Apply default configuration
+                applyLenisConfig({
+                    enable: true,
+                    duration: 1.2,
+                    easing: 'easeInOut',
+                    lerp: 0.1,
+                    direction: 'vertical',
+                    wheelMult: 1,
+                    touchMult: 2,
+                    syncTouch: false,
+                    infinite: false,
+                    wrapper: '',
+                    disableMobile: false
+                }, true);
+            }
+            
+            // Listen for storage changes
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'smoothScrollConfig') {
+                    try {
+                        const config = JSON.parse(e.newValue);
+                        if (config.currentLibrary === 'lenis') {
+                            applyLenisConfig(config.config.lenis, config.isEnabled);
+                        }
+                    } catch (error) {
+                        console.warn('Error parsing config:', error);
+                    }
+                }
+            });
+        }
+        
+        function applyLenisConfig(config, isEnabled) {
+            if (!config || !config.enable || !isEnabled) {
+                destroyLenis();
+                return;
+            }
+            
+            if (config.disableMobile && window.innerWidth <= 640) {
+                destroyLenis();
+                return;
+            }
+            
+            if (typeof Lenis === 'undefined') {
+                setTimeout(() => applyLenisConfig(config, isEnabled), 100);
+                return;
+            }
+            
+            destroyLenis();
+            
+            const easingFunctions = {
+                linear: (t) => t,
+                easeOut: (t) => 1 - Math.pow(1 - t, 3),
+                easeIn: (t) => t * t * t,
+                easeInOut: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+            };
+            
+            const lenisConfig = {
+                duration: config.duration || 1.2,
+                easing: easingFunctions[config.easing] || easingFunctions.easeInOut,
+                lerp: config.lerp || 0.1,
+                direction: config.direction || 'vertical',
+                smooth: true,
+                mouseMultiplier: config.wheelMult || 1,
+                touchMultiplier: config.touchMult || 2,
+                syncTouch: config.syncTouch || false,
+                infinite: config.infinite || false
+            };
+            
+            if (config.wrapper) {
+                const wrapper = document.querySelector(config.wrapper);
+                if (wrapper) lenisConfig.wrapper = wrapper;
+            }
+            
+            lenisInstance = new Lenis(lenisConfig);
+            currentConfig = config;
+            
+            function raf(time) {
+                if (lenisInstance) {
+                    lenisInstance.raf(time);
+                    updateMetrics();
+                    requestAnimationFrame(raf);
+                }
+            }
+            requestAnimationFrame(raf);
+            
+            console.log('Lenis initialized with config:', config);
+        }
+        
+        function updateMetrics() {
+            if (!lenisInstance) return;
+            
+            const progress = Math.round((lenisInstance.scroll / lenisInstance.limit) * 100);
+            const velocity = Math.round(Math.abs(lenisInstance.velocity || 0));
+            
+            document.getElementById('scrollProgress').textContent = progress + '%';
+            document.getElementById('scrollVelocity').textContent = velocity;
+            document.getElementById('lerpValue').textContent = currentConfig?.lerp || '0.1';
+            document.getElementById('fpsCounter').textContent = '60';
+        }
+        
+        function destroyLenis() {
+            if (lenisInstance) {
+                lenisInstance.destroy();
+                lenisInstance = null;
+            }
+        }
+        
+        // Initialize when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initLenisDemo);
+        } else {
+            initLenisDemo();
+        }
+        
+        window.addEventListener('beforeunload', destroyLenis);
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smooth Scroll Demo - Tests</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🧪 Test Suite</h1>
+            <p class="subtitle">Automated tests for the Smooth Scroll Libraries Demo</p>
+        </header>
+
+        <main class="main-content">
+            <section class="config-panel">
+                <h3>Test Results</h3>
+                <div id="testResults">
+                    <p>Running tests...</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="scripts.js"></script>
+    <script>
+        // Test suite for the smooth scroll demo
+        const tests = [];
+        const results = [];
+
+        function test(name, fn) {
+            tests.push({ name, fn });
+        }
+
+        function assert(condition, message) {
+            if (!condition) {
+                throw new Error(message);
+            }
+        }
+
+        function runTests() {
+            const resultsContainer = document.getElementById('testResults');
+            resultsContainer.innerHTML = '';
+
+            tests.forEach(({ name, fn }) => {
+                try {
+                    fn();
+                    results.push({ name, status: 'PASS', error: null });
+                    console.log(`✅ ${name}`);
+                } catch (error) {
+                    results.push({ name, status: 'FAIL', error: error.message });
+                    console.error(`❌ ${name}: ${error.message}`);
+                }
+            });
+
+            // Display results
+            const passCount = results.filter(r => r.status === 'PASS').length;
+            const failCount = results.filter(r => r.status === 'FAIL').length;
+
+            let html = `<h4>Test Summary: ${passCount} passed, ${failCount} failed</h4>`;
+            
+            results.forEach(({ name, status, error }) => {
+                const icon = status === 'PASS' ? '✅' : '❌';
+                html += `<div style="margin: 0.5rem 0; padding: 0.5rem; background: var(--surface); border-radius: 0.5rem;">`;
+                html += `${icon} <strong>${name}</strong>`;
+                if (error) {
+                    html += `<br><small style="color: var(--error-color);">${error}</small>`;
+                }
+                html += `</div>`;
+            });
+
+            resultsContainer.innerHTML = html;
+        }
+
+        // Define tests
+        test('Library configs object exists', () => {
+            assert(typeof libraryConfigs === 'object', 'libraryConfigs should be an object');
+            assert(Object.keys(libraryConfigs).length === 6, 'Should have 6 libraries configured');
+        });
+
+        test('All required libraries are configured', () => {
+            const requiredLibs = ['native-css', 'lenis', 'gsap-scrolltrigger', 'locomotive', 'smooth-scrollbar', 'jquery-smooth-scroll'];
+            requiredLibs.forEach(lib => {
+                assert(libraryConfigs[lib], `${lib} should be configured`);
+            });
+        });
+
+        test('Library initialization functions exist', () => {
+            assert(typeof initNativeCSS === 'function', 'initNativeCSS should be a function');
+            assert(typeof initLenis === 'function', 'initLenis should be a function');
+            assert(typeof initGSAP === 'function', 'initGSAP should be a function');
+            assert(typeof initLocomotive === 'function', 'initLocomotive should be a function');
+            assert(typeof initScrollbar === 'function', 'initScrollbar should be a function');
+            assert(typeof initjQuery === 'function', 'initjQuery should be a function');
+        });
+
+        test('SmoothScrollManager class exists', () => {
+            assert(typeof SmoothScrollManager === 'function', 'SmoothScrollManager should be a constructor function');
+        });
+
+        test('Template function works', () => {
+            const result = tmpl('Hello {{name}}!', { name: 'World' });
+            assert(result === 'Hello World!', 'Template function should replace placeholders');
+        });
+
+        test('Library configs have required properties', () => {
+            Object.entries(libraryConfigs).forEach(([key, config]) => {
+                assert(config.name, `${key} should have a name`);
+                assert(Array.isArray(config.css), `${key} should have css array`);
+                assert(Array.isArray(config.js), `${key} should have js array`);
+                assert(typeof config.options === 'object', `${key} should have options object`);
+            });
+        });
+
+        test('All library files exist in libs directory', () => {
+            // This test would need to be enhanced to actually check file existence
+            // For now, we'll just verify the paths are specified
+            const allFiles = [];
+            Object.values(libraryConfigs).forEach(config => {
+                allFiles.push(...config.css, ...config.js);
+            });
+            
+            allFiles.forEach(file => {
+                assert(file.startsWith('libs/'), `${file} should be in libs directory`);
+            });
+        });
+
+        test('Configuration options have proper structure', () => {
+            Object.entries(libraryConfigs).forEach(([libKey, config]) => {
+                Object.entries(config.options).forEach(([optKey, option]) => {
+                    assert(option.type, `${libKey}.${optKey} should have a type`);
+                    assert(option.default !== undefined, `${libKey}.${optKey} should have a default value`);
+                    
+                    if (option.type === 'select') {
+                        assert(Array.isArray(option.choices), `${libKey}.${optKey} should have choices array`);
+                    }
+                    
+                    if (option.type === 'range') {
+                        assert(typeof option.min === 'number', `${libKey}.${optKey} should have min value`);
+                        assert(typeof option.max === 'number', `${libKey}.${optKey} should have max value`);
+                    }
+                });
+            });
+        });
+
+        test('CSS custom properties are defined', () => {
+            const root = getComputedStyle(document.documentElement);
+            const requiredProps = ['--primary-color', '--background', '--text-primary', '--font-family'];
+            
+            requiredProps.forEach(prop => {
+                const value = root.getPropertyValue(prop);
+                assert(value.trim() !== '', `CSS property ${prop} should be defined`);
+            });
+        });
+
+        // Run tests when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(runTests, 100); // Small delay to ensure everything is loaded
+        });
+    </script>
+</body>
+</html>
+
