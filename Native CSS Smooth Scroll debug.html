@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Native CSS Smooth Scroll - Debug</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        .debug-visualization {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.75rem;
+            z-index: 10000;
+            min-width: 200px;
+        }
+        
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--primary-color);
+            z-index: 10001;
+            transition: width 0.1s ease;
+        }
+        
+        .target-highlight {
+            outline: 2px solid var(--primary-color) !important;
+            outline-offset: 2px;
+            background: rgba(99, 102, 241, 0.1) !important;
+        }
+        
+        .demo-content {
+            padding: 2rem;
+            margin: 2rem 0;
+            background: var(--surface);
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+        }
+        
+        .test-section {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: 2px dashed var(--border);
+            margin: 2rem 0;
+            border-radius: 1rem;
+            position: relative;
+        }
+        
+        .test-section::before {
+            content: attr(data-section);
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .test-section:nth-child(even) {
+            background: var(--surface);
+        }
+        
+        .performance-chart {
+            width: 100%;
+            height: 100px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-line {
+            position: absolute;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary-color);
+            transition: height 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-indicator" id="scrollIndicator"></div>
+    
+    <!-- Debug Visualization -->
+    <div class="debug-visualization" id="debugViz">
+        <div><strong>Native CSS Debug</strong></div>
+        <div>Scroll Y: <span id="scrollY">0</span>px</div>
+        <div>Scroll %: <span id="scrollPercent">0</span>%</div>
+        <div>Active Target: <span id="activeTarget">none</span></div>
+        <div>Scroll Behavior: <span id="scrollBehavior">smooth</span></div>
+        <div>Browser Support: <span id="browserSupport">checking...</span></div>
+        <div>Viewport: <span id="viewport">0x0</span></div>
+        <div>Document Height: <span id="docHeight">0</span>px</div>
+        <div>Last Scroll Event: <span id="lastScroll">never</span></div>
+        <div>Scroll Direction: <span id="scrollDirection">none</span></div>
+        <div>Scroll Velocity: <span id="scrollVelocity">0</span>px/s</div>
+    </div>
+
+    <!-- Debug Panel -->
+    <div class="debug-container">
+        <div class="debug-content">
+            <h1>🐛 Native CSS Smooth Scroll Debug</h1>
+            <p>This page provides real-time debugging information for native CSS smooth scroll implementation.</p>
+            
+            <!-- Configuration Display -->
+            <div class="demo-content">
+                <h3>⚙️ Current Configuration</h3>
+                <div id="configDisplay">
+                    <div class="debug-metric">
+                        <span class="debug-metric-label">Enabled:</span>
+                        <span class="debug-metric-value" id="configEnabled">Unknown</span>
+                    </div>
+                    <div class="debug-metric">
+                        <span class="debug-metric-label">Target Selector:</span>
+                        <span class="debug-metric-value" id="configTarget">Unknown</span>
+                    </div>
+                    <div class="debug-metric">
+                        <span class="debug-metric-label">Scroll Behavior:</span>
+                        <span class="debug-metric-value" id="configBehavior">Unknown</span>
+                    </div>
+                    <div class="debug-metric">
+                        <span class="debug-metric-label">Fallback Enabled:</span>
+                        <span class="debug-metric-value" id="configFallback">Unknown</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Browser Support Info -->
+            <div class="demo-content">
+                <h3>🌐 Browser Support</h3>
+                <div id="browserSupportDetails">
+                    <div class="debug-metric">
+                        <span class="debug-metric-label">scroll-behavior Support:</span>
+                        <span class="debug-metric-value" id="scrollBehaviorSupport">Checking...</span>
+                    </div>
+                    <div class="debug-metric">
+                        <span class="debug-metric-label">scrollIntoView Support:</span>
+                        <span class="debug-metric-value" id="scrollIntoViewSupport">Checking...</span>
+                    </div>
+                    <div class="debug-metric">
+                        <span class="debug-metric-label">Smooth Scrolling Active:</span>
+                        <span class="debug-metric-value" id="smoothScrollActive">Checking...</span>
+                    </div>
+                    <div class="debug-metric">
+                        <span class="debug-metric-label">User Agent:</span>
+                        <span class="debug-metric-value" id="userAgent" style="font-size: 0.75rem; word-break: break-all;">Loading...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Performance Metrics -->
+            <div class="demo-content">
+                <h3>📊 Performance Metrics</h3>
+                <div class="performance-chart" id="performanceChart"></div>
+                <div id="performanceMetrics">
+                    <div class="debug-metric">
+                        <span class="debug-metric-label">Scroll Events/sec:</span>
+                        <span class="debug-metric-value" id="scrollEventsPerSec">0</span>
+                    </div>
+                    <div class="debug-metric">
+                        <span class="debug-metric-label">Average Frame Time:</span>
+                        <span class="debug-metric-value" id="avgFrameTime">0ms</span>
+                    </div>
+                    <div class="debug-metric">
+                        <span class="debug-metric-label">Scroll Smoothness:</span>
+                        <span class="debug-metric-value" id="scrollSmoothness">Good</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Test Sections -->
+            <div class="test-section" data-section="Section 1" id="section1">
+                <div>
+                    <h2>Test Section 1</h2>
+                    <p>This is the first test section for debugging scroll behavior.</p>
+                    <a href="#section2" class="btn btn-primary">Scroll to Section 2</a>
+                </div>
+            </div>
+            
+            <div class="test-section" data-section="Section 2" id="section2">
+                <div>
+                    <h2>Test Section 2</h2>
+                    <p>This is the second test section. Notice the smooth scrolling behavior.</p>
+                    <a href="#section3" class="btn btn-primary">Scroll to Section 3</a>
+                </div>
+            </div>
+            
+            <div class="test-section" data-section="Section 3" id="section3">
+                <div>
+                    <h2>Test Section 3</h2>
+                    <p>This is the third test section for comprehensive testing.</p>
+                    <a href="#section4" class="btn btn-primary">Scroll to Section 4</a>
+                </div>
+            </div>
+            
+            <div class="test-section" data-section="Section 4" id="section4">
+                <div>
+                    <h2>Test Section 4</h2>
+                    <p>Final test section. Test completed!</p>
+                    <a href="#section1" class="btn btn-primary">Back to Section 1</a>
+                </div>
+            </div>
+            
+            <!-- Event Log -->
+            <div class="demo-content">
+                <h3>📝 Event Log</h3>
+                <div class="debug-log" id="eventLog">
+                    <div class="debug-log-entry">
+                        <span class="debug-log-timestamp">[00:00:00]</span>
+                        Debug session started
+                    </div>
+                </div>
+                <button onclick="clearEventLog()" class="btn btn-secondary" style="margin-top: 1rem;">Clear Log</button>
+            </div>
+        </div>
+        
+        <!-- Debug Panel Sidebar -->
+        <div class="debug-panel">
+            <h3>🔍 Real-time Debug</h3>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Status:</span>
+                <span class="debug-metric-value" id="debugStatus">Active</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Scroll Position:</span>
+                <span class="debug-metric-value" id="debugScrollPos">0px</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Target Element:</span>
+                <span class="debug-metric-value" id="debugTarget">None</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Scroll Speed:</span>
+                <span class="debug-metric-value" id="debugSpeed">0 px/s</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">Direction:</span>
+                <span class="debug-metric-value" id="debugDirection">-</span>
+            </div>
+            
+            <div class="debug-metric">
+                <span class="debug-metric-label">In Viewport:</span>
+                <span class="debug-metric-value" id="debugInViewport">-</span>
+            </div>
+            
+            <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+            
+            <h4>Quick Actions</h4>
+            <button onclick="scrollToTop()" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">Scroll to Top</button>
+            <button onclick="scrollToBottom()" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">Scroll to Bottom</button>
+            <button onclick="testSmoothScroll()" class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;">Test Smooth Scroll</button>
+            
+            <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+            
+            <div style="text-align: center;">
+                <a href="index.html" class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;">← Config</a>
+                <a href="Native CSS Smooth Scroll.html" class="btn btn-demo" style="width: 100%;">Demo →</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Debug state
+        let debugState = {
+            scrollEvents: 0,
+            lastScrollTime: 0,
+            lastScrollY: 0,
+            scrollVelocity: 0,
+            frameTimeHistory: [],
+            config: null,
+            isEnabled: false
+        };
+        
+        // Initialize debug functionality
+        function initDebug() {
+            checkBrowserSupport();
+            setupScrollTracking();
+            setupConfigTracking();
+            startPerformanceMonitoring();
+            logEvent('Native CSS debug initialized');
+        }
+        
+        function checkBrowserSupport() {
+            // Check scroll-behavior support
+            const scrollBehaviorSupported = 'scrollBehavior' in document.documentElement.style;
+            document.getElementById('scrollBehaviorSupport').textContent = scrollBehaviorSupported ? 'Yes' : 'No';
+            
+            // Check scrollIntoView with options support
+            const scrollIntoViewSupported = 'scrollIntoView' in Element.prototype;
+            document.getElementById('scrollIntoViewSupport').textContent = scrollIntoViewSupported ? 'Yes' : 'No';
+            
+            // Check if smooth scrolling is currently active
+            const computedStyle = getComputedStyle(document.documentElement);
+            const scrollBehavior = computedStyle.scrollBehavior || 'auto';
+            document.getElementById('smoothScrollActive').textContent = scrollBehavior;
+            document.getElementById('scrollBehavior').textContent = scrollBehavior;
+            
+            // User agent
+            document.getElementById('userAgent').textContent = navigator.userAgent;
+            
+            // Overall browser support
+            const supported = scrollBehaviorSupported && scrollIntoViewSupported;
+            document.getElementById('browserSupport').textContent = supported ? 'Full Support' : 'Partial/No Support';
+            document.getElementById('browserSupport').style.color = supported ? 'green' : 'red';
+            
+            logEvent(`Browser support checked: ${supported ? 'Full' : 'Partial'}`);
+        }
+        
+        function setupScrollTracking() {
+            let lastScrollTime = performance.now();
+            let scrollEventCount = 0;
+            let lastDirection = 'none';
+            
+            window.addEventListener('scroll', () => {
+                const now = performance.now();
+                const scrollY = window.pageYOffset;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = Math.round((scrollY / docHeight) * 100);
+                
+                // Calculate velocity
+                const timeDiff = now - lastScrollTime;
+                const scrollDiff = scrollY - debugState.lastScrollY;
+                debugState.scrollVelocity = Math.round(Math.abs(scrollDiff) / (timeDiff / 1000));
+                
+                // Determine direction
+                let direction = 'none';
+                if (scrollDiff > 0) direction = 'down';
+                else if (scrollDiff < 0) direction = 'up';
+                
+                // Update UI
+                document.getElementById('scrollY').textContent = Math.round(scrollY);
+                document.getElementById('scrollPercent').textContent = scrollPercent;
+                document.getElementById('scrollDirection').textContent = direction;
+                document.getElementById('scrollVelocity').textContent = debugState.scrollVelocity;
+                document.getElementById('viewport').textContent = `${window.innerWidth}x${window.innerHeight}`;
+                document.getElementById('docHeight').textContent = document.documentElement.scrollHeight;
+                document.getElementById('lastScroll').textContent = new Date().toLocaleTimeString();
+                
+                // Update debug panel
+                document.getElementById('debugScrollPos').textContent = Math.round(scrollY) + 'px';
+                document.getElementById('debugSpeed').textContent = debugState.scrollVelocity + ' px/s';
+                document.getElementById('debugDirection').textContent = direction;
+                
+                // Update scroll indicator
+                const indicator = document.getElementById('scrollIndicator');
+                indicator.style.width = scrollPercent + '%';
+                
+                // Check which elements are in viewport
+                updateInViewportElements();
+                
+                // Log significant scroll events
+                if (direction !== lastDirection && direction !== 'none') {
+                    logEvent(`Scroll direction changed to ${direction}`);
+                    lastDirection = direction;
+                }
+                
+                // Update state
+                debugState.lastScrollY = scrollY;
+                debugState.scrollEvents++;
+                lastScrollTime = now;
+                scrollEventCount++;
+                
+                // Calculate events per second
+                if (scrollEventCount % 10 === 0) {
+                    const eventsPerSec = Math.round(1000 / (timeDiff || 1));
+                    document.getElementById('scrollEventsPerSec').textContent = eventsPerSec;
+                }
+            });
+            
+            // Track click events on anchor links
+            document.addEventListener('click', (e) => {
+                if (e.target.tagName === 'A' && e.target.getAttribute('href')?.startsWith('#')) {
+                    const targetId = e.target.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        document.getElementById('activeTarget').textContent = targetId;
+                        document.getElementById('debugTarget').textContent = targetId;
+                        
+                        // Highlight target element
+                        document.querySelectorAll('.target-highlight').forEach(el => {
+                            el.classList.remove('target-highlight');
+                        });
+                        targetElement.classList.add('target-highlight');
+                        
+                        logEvent(`Navigating to target: ${targetId}`);
+                        
+                        // Remove highlight after 3 seconds
+                        setTimeout(() => {
+                            targetElement.classList.remove('target-highlight');
+                        }, 3000);
+                    }
+                }
+            });
+        }
+        
+        function updateInViewportElements() {
+            const sections = document.querySelectorAll('.test-section');
+            const inViewport = [];
+            
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+                
+                if (isVisible) {
+                    inViewport.push(section.id || section.dataset.section);
+                }
+            });
+            
+            document.getElementById('debugInViewport').textContent = inViewport.join(', ') || 'None';
+        }
+        
+        function setupConfigTracking() {
+            // Request configuration from main page
+            if (window.opener) {
+                window.opener.postMessage({ type: 'requestConfig' }, '*');
+            }
+            
+            // Listen for configuration updates
+            window.addEventListener('message', (e) => {
+                if (e.data.type === 'configUpdate') {
+                    updateConfigDisplay(e.data.config.native, e.data.isEnabled);
+                    applyNativeConfig(e.data.config.native, e.data.isEnabled);
+                }
+            });
+            
+            // Listen for storage changes
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'smoothScrollConfig') {
+                    try {
+                        const config = JSON.parse(e.newValue);
+                        if (config.currentLibrary === 'native') {
+                            updateConfigDisplay(config.config.native, config.isEnabled);
+                            applyNativeConfig(config.config.native, config.isEnabled);
+                        }
+                    } catch (error) {
+                        console.warn('Error parsing config from storage:', error);
+                    }
+                }
+            });
+            
+            // Load from localStorage as fallback
+            try {
+                const stored = localStorage.getItem('smoothScrollConfig');
+                if (stored) {
+                    const config = JSON.parse(stored);
+                    if (config.currentLibrary === 'native') {
+                        updateConfigDisplay(config.config.native, config.isEnabled);
+                        applyNativeConfig(config.config.native, config.isEnabled);
+                    }
+                }
+            } catch (error) {
+                console.warn('Error loading config from localStorage:', error);
+            }
+        }
+        
+        function updateConfigDisplay(config, isEnabled) {
+            if (!config) return;
+            
+            debugState.config = config;
+            debugState.isEnabled = isEnabled;
+            
+            document.getElementById('configEnabled').textContent = config.enable && isEnabled ? 'Yes' : 'No';
+            document.getElementById('configTarget').textContent = config.target === 'custom' ? config['custom-selector'] || 'Custom' : 'All links';
+            document.getElementById('configBehavior').textContent = config.behavior || 'smooth';
+            document.getElementById('configFallback').textContent = config.fallback ? 'Yes' : 'No';
+            
+            logEvent(`Configuration updated: ${JSON.stringify(config)}`);
+        }
+        
+        function applyNativeConfig(config, isEnabled) {
+            if (!config || !config.enable || !isEnabled) {
+                document.documentElement.style.scrollBehavior = 'auto';
+                document.getElementById('debugStatus').textContent = 'Disabled';
+                return;
+            }
+            
+            document.documentElement.style.scrollBehavior = config.behavior || 'smooth';
+            document.getElementById('debugStatus').textContent = 'Active';
+            
+            // Update scroll behavior display
+            document.getElementById('scrollBehavior').textContent = config.behavior || 'smooth';
+            document.getElementById('smoothScrollActive').textContent = config.behavior || 'smooth';
+        }
+        
+        function startPerformanceMonitoring() {
+            let frameCount = 0;
+            let lastTime = performance.now();
+            
+            function measurePerformance() {
+                const now = performance.now();
+                const frameTime = now - lastTime;
+                
+                debugState.frameTimeHistory.push(frameTime);
+                if (debugState.frameTimeHistory.length > 60) {
+                    debugState.frameTimeHistory.shift();
+                }
+                
+                // Calculate average frame time
+                const avgFrameTime = debugState.frameTimeHistory.reduce((a, b) => a + b, 0) / debugState.frameTimeHistory.length;
+                document.getElementById('avgFrameTime').textContent = Math.round(avgFrameTime * 100) / 100 + 'ms';
+                
+                // Determine scroll smoothness
+                const fps = 1000 / avgFrameTime;
+                let smoothness = 'Poor';
+                if (fps > 50) smoothness = 'Excellent';
+                else if (fps > 30) smoothness = 'Good';
+                else if (fps > 20) smoothness = 'Fair';
+                
+                document.getElementById('scrollSmoothness').textContent = smoothness;
+                
+                // Update performance chart
+                updatePerformanceChart(frameTime);
+                
+                lastTime = now;
+                frameCount++;
+                
+                requestAnimationFrame(measurePerformance);
+            }
+            
+            requestAnimationFrame(measurePerformance);
+        }
+        
+        function updatePerformanceChart(frameTime) {
+            const chart = document.getElementById('performanceChart');
+            const line = document.createElement('div');
+            line.className = 'chart-line';
+            line.style.left = (chart.children.length * 3) + 'px';
+            line.style.height = Math.min(frameTime * 2, 100) + 'px';
+            
+            chart.appendChild(line);
+            
+            // Remove old lines
+            if (chart.children.length > 100) {
+                chart.removeChild(chart.firstChild);
+                // Shift remaining lines
+                Array.from(chart.children).forEach((child, index) => {
+                    child.style.left = (index * 3) + 'px';
+                });
+            }
+        }
+        
+        function logEvent(message) {
+            const log = document.getElementById('eventLog');
+            const entry = document.createElement('div');
+            entry.className = 'debug-log-entry';
+            
+            const timestamp = new Date().toLocaleTimeString();
+            entry.innerHTML = `<span class="debug-log-timestamp">[${timestamp}]</span> ${message}`;
+            
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+            
+            // Limit log entries
+            if (log.children.length > 100) {
+                log.removeChild(log.firstChild);
+            }
+        }
+        
+        function clearEventLog() {
+            document.getElementById('eventLog').innerHTML = '<div class="debug-log-entry"><span class="debug-log-timestamp">[' + new Date().toLocaleTimeString() + ']</span> Event log cleared</div>';
+        }
+        
+        // Quick action functions
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            logEvent('Scroll to top triggered');
+        }
+        
+        function scrollToBottom() {
+            window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+            logEvent('Scroll to bottom triggered');
+        }
+        
+        function testSmoothScroll() {
+            const sections = ['section1', 'section2', 'section3', 'section4'];
+            let currentIndex = 0;
+            
+            function scrollToNext() {
+                if (currentIndex < sections.length) {
+                    const element = document.getElementById(sections[currentIndex]);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                        logEvent(`Test scroll to ${sections[currentIndex]}`);
+                    }
+                    currentIndex++;
+                    setTimeout(scrollToNext, 2000);
+                } else {
+                    logEvent('Smooth scroll test completed');
+                }
+            }
+            
+            logEvent('Starting smooth scroll test');
+            scrollToNext();
+        }
+        
+        // Initialize when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initDebug);
+        } else {
+            initDebug();
+        }
+    </script>
+</body>
+</html>
+

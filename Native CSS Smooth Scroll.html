@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Native CSS Smooth Scroll - Demo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Native CSS smooth scroll implementation */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Demo-specific styles */
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .hero-content p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .cta-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .feature-item {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .gallery-item {
+            aspect-ratio: 16/9;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-weight: 500;
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .testimonial-card {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+            margin: 1rem 0;
+            position: relative;
+        }
+        
+        .testimonial-card::before {
+            content: '"';
+            font-size: 4rem;
+            color: var(--primary-color);
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-family: serif;
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+        
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--primary-color);
+            padding-left: 2rem;
+        }
+        
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .submit-button {
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .submit-button:hover {
+            background: var(--primary-hover);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="demo-nav">
+        <h3>🧭 Navigation</h3>
+        <ul>
+            <li><a href="#hero">Hero</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+            <li><a href="#testimonials">Testimonials</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+            <a href="Native CSS Smooth Scroll debug.html" class="btn btn-debug" style="width: 100%; text-align: center;">Debug View</a>
+        </div>
+    </nav>
+
+    <!-- Back to Config -->
+    <a href="index.html" class="back-to-config">⚙️ Back to Config</a>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+        <div class="hero-content">
+            <h1>Native CSS Smooth Scroll</h1>
+            <p>Experience the simplicity and performance of native CSS smooth scrolling. No JavaScript libraries required - just pure CSS magic with the scroll-behavior property.</p>
+            <a href="#features" class="cta-button">Explore Features</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="demo-section">
+        <div class="demo-container">
+            <h2>✨ Key Features</h2>
+            <p>Native CSS smooth scroll offers several advantages for modern web development:</p>
+            
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Zero Dependencies</h3>
+                    <p>No external libraries or JavaScript required. Uses the native CSS scroll-behavior property for optimal performance.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Lightweight</h3>
+                    <p>Minimal impact on page load times and bundle size. The browser handles all the smooth scrolling natively.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Simple Implementation</h3>
+                    <p>Just add scroll-behavior: smooth to your CSS and use standard anchor links. It's that easy!</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Wide Browser Support</h3>
+                    <p>Supported in all modern browsers with graceful fallback to instant scrolling in older browsers.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">♿</div>
+                    <h3>Accessibility Friendly</h3>
+                    <p>Respects user preferences for reduced motion and works seamlessly with screen readers.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">🔧</div>
+                    <h3>Easy to Customize</h3>
+                    <p>Can be applied globally or to specific elements. Works with JavaScript scroll methods too.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="demo-section">
+        <div class="demo-container">
+            <h2>🖼️ Visual Gallery</h2>
+            <p>Scroll through this gallery to experience the smooth scrolling behavior in action. Each item demonstrates how native CSS smooth scroll works with different content types.</p>
+            
+            <div class="gallery-grid">
+                <div class="gallery-item">Image Placeholder 1</div>
+                <div class="gallery-item">Image Placeholder 2</div>
+                <div class="gallery-item">Image Placeholder 3</div>
+                <div class="gallery-item">Image Placeholder 4</div>
+                <div class="gallery-item">Image Placeholder 5</div>
+                <div class="gallery-item">Image Placeholder 6</div>
+                <div class="gallery-item">Image Placeholder 7</div>
+                <div class="gallery-item">Image Placeholder 8</div>
+            </div>
+            
+            <p>Notice how smoothly the page scrolls when you click the navigation links above. This is achieved with just one line of CSS: <code>scroll-behavior: smooth;</code></p>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="demo-section">
+        <div class="demo-container">
+            <h2>💬 What Developers Say</h2>
+            <p>Here's what web developers think about native CSS smooth scrolling:</p>
+            
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    Native CSS smooth scroll is a game-changer for performance-conscious developers. It's incredibly simple to implement and works beautifully across all modern browsers.
+                </div>
+                <div class="testimonial-author">— Sarah Chen, Frontend Developer</div>
+            </div>
+            
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    I love how lightweight this solution is. No more heavy JavaScript libraries just for smooth scrolling. The native implementation is smooth and respects user preferences.
+                </div>
+                <div class="testimonial-author">— Marcus Rodriguez, UX Engineer</div>
+            </div>
+            
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    The accessibility benefits are huge. Native smooth scroll automatically respects the user's motion preferences, making our sites more inclusive by default.
+                </div>
+                <div class="testimonial-author">— Emily Watson, Accessibility Specialist</div>
+            </div>
+            
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    Perfect for progressive enhancement. It works great as a baseline, and you can always add more advanced libraries for specific use cases later.
+                </div>
+                <div class="testimonial-author">— David Kim, Full Stack Developer</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="demo-section">
+        <div class="demo-container">
+            <h2>📧 Get In Touch</h2>
+            <p>Have questions about implementing native CSS smooth scroll? Want to share your experience? We'd love to hear from you!</p>
+            
+            <form class="contact-form" onsubmit="handleFormSubmit(event)">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" name="subject" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" required placeholder="Tell us about your experience with native CSS smooth scroll..."></textarea>
+                </div>
+                
+                <button type="submit" class="submit-button">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="demo-section" style="background: var(--surface); border-top: 1px solid var(--border);">
+        <div class="demo-container text-center">
+            <h3>Native CSS Smooth Scroll Demo</h3>
+            <p>This demo showcases the native CSS scroll-behavior property in action.</p>
+            <p>
+                <a href="index.html">← Back to Configuration</a> |
+                <a href="Native CSS Smooth Scroll debug.html">Debug View →</a>
+            </p>
+            <p style="margin-top: 2rem; color: var(--text-muted); font-size: 0.875rem;">
+                Scroll to top: <a href="#hero">🔝</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize native CSS smooth scroll with current configuration
+        function initNativeSmooth() {
+            // Request configuration from main page
+            if (window.opener) {
+                window.opener.postMessage({ type: 'requestConfig' }, '*');
+            }
+            
+            // Listen for configuration updates
+            window.addEventListener('message', (e) => {
+                if (e.data.type === 'configUpdate') {
+                    applyNativeConfig(e.data.config.native, e.data.isEnabled);
+                }
+            });
+            
+            // Listen for storage changes (cross-tab communication)
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'smoothScrollConfig') {
+                    try {
+                        const config = JSON.parse(e.newValue);
+                        if (config.currentLibrary === 'native') {
+                            applyNativeConfig(config.config.native, config.isEnabled);
+                        }
+                    } catch (error) {
+                        console.warn('Error parsing config from storage:', error);
+                    }
+                }
+            });
+            
+            // Load from localStorage as fallback
+            try {
+                const stored = localStorage.getItem('smoothScrollConfig');
+                if (stored) {
+                    const config = JSON.parse(stored);
+                    if (config.currentLibrary === 'native') {
+                        applyNativeConfig(config.config.native, config.isEnabled);
+                    }
+                }
+            } catch (error) {
+                console.warn('Error loading config from localStorage:', error);
+                // Apply default configuration
+                applyNativeConfig({
+                    enable: true,
+                    target: 'all',
+                    behavior: 'smooth',
+                    fallback: true
+                }, true);
+            }
+        }
+        
+        function applyNativeConfig(config, isEnabled) {
+            if (!config || !config.enable || !isEnabled) {
+                // Disable smooth scrolling
+                document.documentElement.style.scrollBehavior = 'auto';
+                return;
+            }
+            
+            // Apply scroll behavior
+            document.documentElement.style.scrollBehavior = config.behavior || 'smooth';
+            
+            // Handle custom target selector
+            const targetSelector = config.target === 'custom' && config['custom-selector']
+                ? config['custom-selector']
+                : 'a[href^="#"]';
+            
+            // Remove existing event listeners
+            document.querySelectorAll('a[href^="#"]').forEach(link => {
+                link.removeEventListener('click', handleSmoothScroll);
+            });
+            
+            // Add new event listeners
+            document.querySelectorAll(targetSelector).forEach(link => {
+                link.addEventListener('click', handleSmoothScroll);
+            });
+            
+            console.log('Native CSS smooth scroll configured:', config);
+        }
+        
+        function handleSmoothScroll(e) {
+            const href = e.target.getAttribute('href');
+            if (href && href.startsWith('#')) {
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({
+                        behavior: document.documentElement.style.scrollBehavior || 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
+        }
+        
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            alert('This is a demo form. In a real implementation, this would send your message.');
+            return false;
+        }
+        
+        // Initialize when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initNativeSmooth);
+        } else {
+            initNativeSmooth();
+        }
+        
+        // Add some interactive behavior for demo purposes
+        document.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+            const hero = document.querySelector('.hero-section');
+            if (hero) {
+                hero.style.transform = `translateY(${rate}px)`;
+            }
+        });
+    </script>
+</body>
+</html>
+
